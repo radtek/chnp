@@ -8,9 +8,33 @@
 	<artifactId>chnp</artifactId>
 	<packaging>pom</packaging>
 	<version>1.0</version>
+
 	<modules>
 		<module>chnp-redistool</module>
 	</modules>
 
+	<properties>
+		<!-- Ali Json工具默认版本 -->
+		<ali.json.version>1.2.49</ali.json.version>
+		<!-- SLF-LOG4J日志框架默认版本 -->
+		<slf4j.version>1.7.21</slf4j.version>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- 日志框架：slf4j-log4j12 -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-log4j12</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<!-- JSON工具：FastJson -->
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>fastjson</artifactId>
+				<version>${ali.json.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 </project>
