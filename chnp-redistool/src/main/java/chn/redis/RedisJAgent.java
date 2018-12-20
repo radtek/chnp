@@ -39,6 +39,18 @@ public class RedisJAgent extends RedisJTemplate {
 		this.redisJPool.initializePool(redisConfigs, keyMaps);
 	}
 
+	public void refresh(List<Map<String, String>> redisConfigs) {
+		this.redisJPool.initializePool(redisConfigs, this.redisJPool.getKeyMappings());
+	}
+
+	public void refresh(Map<String, String> keyMaps) {
+		this.redisJPool.setKeyMappings(keyMaps);
+	}
+
+	public void refresh(List<Map<String, String>> redisConfigs, Map<String, String> keyMaps) {
+		this.redisJPool.initializePool(redisConfigs, keyMaps);
+	}
+
 	@Override
 	public JedisPool getClient(String key) throws RedisJException {
 		if (null == key || "".equals(key)) throw new RedisJException("键名不能为空");
@@ -56,32 +68,38 @@ public class RedisJAgent extends RedisJTemplate {
 
 	public static void main(String[] args) throws Exception {
 		// 使用样例
-		RedisJAgent agent = new RedisJAgent(
-				new ArrayList<Map<String, String>>() {
+		List<Map<String, String>> configs = new ArrayList<Map<String, String>>() {
+			{
+				add(new HashMap<String, String>() {
 					{
-						add(new HashMap<String, String>() {
-							{
-								put(RedisJPool.CONFIG_HOST, "192.168.21.31");
-							}
-						});
-						add(new HashMap<String, String>() {
-							{
-								put(RedisJPool.CONFIG_HOST, "192.168.21.32");
-							}
-						});
+						put(RedisJPool.CONFIG_HOST, "192.168.21.31");
 					}
-				},
-				new HashMap<String, String>() {
-					{
-						put("CpeInfo", "192.168.21.32");
-					}
-				}
-		);
+				});
+			}
+		};
+		Map<String, String> mappings = new HashMap<String, String>() {
+			{
+				put("TestInfo", "192.168.21.31");
+			}
+		};
 
-		agent.set("CpeInfo-0000002", "TestCpeInfo011");
+		RedisJAgent agent = new RedisJAgent(configs, mappings);
+
+		agent.set("TestInfo-2", "TestInfo1");
+
+		configs.add(new HashMap<String, String>() {
+			{
+				put(RedisJPool.CONFIG_HOST, "192.168.21.32");
+			}
+		});
+		mappings.put("TestInfo", "192.168.21.32");
+
+		agent.refresh(configs, mappings);
+
+		agent.set("TestInfo-2", "TestInfo11");
 
 		agent.close();
-		agent.set("CpeInfo-0000001", "TestCpeInfo011");
+		agent.set("TestInfo-0000001", "TestCpeInfo011");
 	}
 
 

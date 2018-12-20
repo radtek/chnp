@@ -52,6 +52,46 @@ public class RedisJPool {
 		return client;
 	}
 
+	/**<p>初始化客户端池。</p>
+	 *
+	 * @param configs Redis配置集合
+	 * @param keyMaps KEY-IP映射关系
+	 * @throws RedisJException
+	 */
+	public void initializePool(List<Map<String, String>> configs, Map<String, String> keyMaps) throws RedisJException {
+		if (null == configs || 0 == configs.size())
+			throw new RedisJException("Redis客户端代理创建失败！未提供Redis配置。");
+
+		Set<String> newHosts = new HashSet<>();
+
+		List<RedisJInitial> initials = new ArrayList<>();
+		for (Map<String, String> config : configs) {
+			initials.add(create(config));
+			newHosts.add(config.get(CONFIG_HOST).trim());
+		}
+
+		// 创建新的客户端
+		// 为了避免影响现有的业务，不对池内的旧客户端实例做任何操作，而是先创建新的客户端，做好准备。
+		for (RedisJInitial initial : initials) {
+			if (!this.clients.containsKey(initial.getHost())) {
+				this.clients.put(
+						initial.getHost(),
+						new JedisPool(initial, initial.getHost(), initial.getPort())
+				);
+				log.info("IP为{}的Redis服务被添加！客户端已生成！！", initial.getHost());
+			}
+		}
+
+		// 设置KEY-IP映射关系
+		// 池内已经存在新的客户端实例，更新KEY-IP映射关系后，可以立即应用。
+		if (null == keyMaps) this.keyMappings.clear();
+		else this.keyMappings = keyMaps;
+
+		// 销毁被排除的客户端
+		// 逐渐关闭并从池内移除被排除的客户端实例。
+		destroy(newHosts);
+	}
+
 	/**<p>清空Redis客户端池。</p>
 	 *
 	 */
@@ -66,60 +106,20 @@ public class RedisJPool {
 	public void destroy(Set<String> newHosts) {
 		boolean removeAll = null == newHosts;
 
-		synchronized (this) {
-			for (Map.Entry<String, JedisPool> entry : this.clients.entrySet()) {
-				// 若Redis服务器本次被移除，则销毁客户端
-				if (removeAll || !newHosts.contains(entry.getKey())) {
-					JedisPool client = entry.getValue();
-					if (!client.isClosed()) client.close();
+		Set<String> hostClosed = new HashSet<>();
+		for (String host : this.clients.keySet()) {
+			// 若Redis服务器本次被移除，则销毁客户端
+			if (removeAll || !newHosts.contains(host)) {
+				JedisPool client = this.clients.get(host);
+				if (!client.isClosed()) client.close();
+				hostClosed.add(host);
 
-					this.clients.remove(entry.getKey());
-
-					if (!removeAll)
-						newHosts.remove(entry.getKey());
-
-					log.info("IP为" + entry.getKey() + "的Redis服务已被移除！客户端已被销毁！！");
-				}
+				log.info("IP为{}的Redis服务客户端已被关闭！！", host);
 			}
 		}
-	}
 
-	/**<p>初始化客户端池。</p>
-	 *
-	 * @param configs Redis配置集合
-	 * @param keyMaps KEY-IP映射关系
-	 * @throws RedisJException
-	 */
-	public void initializePool(List<Map<String, String>> configs, Map<String, String> keyMaps) throws RedisJException {
-		if (null == configs || 0 == configs.size())
-			throw new RedisJException("Redis客户端代理创建失败！未提供Redis配置。");
-
-		Set<String> newHosts = new HashSet<>();
-		List<RedisJInitial> initials = new ArrayList<>();
-		for (Map<String, String> config : configs) {
-			initials.add(create(config));
-			newHosts.add(config.get(CONFIG_HOST).trim());
-		}
-
-		synchronized (this) {
-			// 销毁被移除的Redis服务客户端
-			destroy(newHosts);
-
-			// 创建新的Redis客户端
-			for (RedisJInitial initial : initials) {
-				if (!this.clients.containsKey(initial.getHost())) {
-					this.clients.put(
-							initial.getHost(),
-							new JedisPool(initial, initial.getHost(), initial.getPort())
-					);
-					log.info("IP为" + initial.getHost() + "的Redis服务被添加！客户端已生成！！");
-				}
-			}
-
-			// 设置KEY-IP映射关系
-			if (null == keyMaps) this.keyMappings.clear();
-			else this.keyMappings = keyMaps;
-		}
+		for (String host : hostClosed) this.clients.remove(host);
+		log.info("Redis客户端池长度：{}", this.clients.size());
 	}
 
 	private RedisJInitial create(Map<String, String> config) {
