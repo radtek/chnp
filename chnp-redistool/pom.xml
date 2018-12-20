@@ -11,5 +11,23 @@
 
 	<artifactId>chnp-redistool</artifactId>
 
+	<properties>
+		<jedis.version>2.9.0</jedis.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>chn.projects</groupId>
+			<artifactId>chnp-common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<!-- Redis Java驱动 -->
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>${jedis.version}</version>
+		</dependency>
+	</dependencies>
 
 </project>

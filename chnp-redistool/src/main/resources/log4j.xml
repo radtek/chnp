@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration PUBLIC "-//APACHE//DTD LOG4J 1.2//EN" "log4j.dtd">
+<!-- 
+********** ********** ********** ********** ********** ********** ********** ********** ********** ********** ********** **********
+	-appender：输出方式
+		@param name 唯一标识字符串
+		@param class 日志输出类。不同的类代表不同的输出方式，共分五种：
+			ConsoleAppender：控制台，org.apache.log4j.ConsoleAppender
+			FileAppender：文件，org.apache.log4j.FileAppender
+			DailyRollingFileAppender：每天产生一个文件，org.apache.log4j.DailyRollingFileAppender
+			RollingFileAppender：超出大小产生新文件，org.apache.log4j.RollingFileAppender
+			WriterAppender：以流格式发送至，org.apache.log4j.WriterAppender
+		-layout：输出格式
+			@param class 日志格式类
+				org.apache.log4j.EnhancedPatternLayout
+				org.apache.log4j.HTMLLayout
+				org.apache.log4j.PatternLayout
+				org.apache.log4j.SimpleLayout
+				org.apache.log4j.TTCCLayout
+			-param：格式类属性
+				@param name 属性名称
+				@param value 属性值
+					%d(Datetime)：输出日期和时间的格式，默认格式是ISO8061。也可在后面指定格式，如%d{yyyy-MM-dd HH:mm:ss SSS}
+					%t(Thread)：输出产生该日志事件的线程名
+					%c(Class)：输出日志所在的类，一般为类名。可在后面指定输出类名的深度，如org.springframework.http.HttpEntity，%c{2}表示输出http.HttpEntity
+					%l(Location)：输出日志事件的发生位置，包括类目名、发生的线程，以及在代码中的行数
+					%L(Line)：输出日志在代码中的行数
+					%m(Message)：输出日志信息
+					%n：输出换行符
+		-filter：限制输出的日志级别
+			@param class 限制类
+				org.apache.log4j.varia.DenyAllFilter：拒绝所有等级的日志输出
+				org.apache.log4j.varia.LevelMatchFilter：指定具体等级的日志输出
+				org.apache.log4j.varia.LevelRangeFilter：指定范围等级的日志输出
+				org.apache.log4j.varia.StringMatchFilter：指定带有匹配字符串的日志输出
+			-param：限制类属性
+				@param name 属性名称
+					LevelMin：输出日志的最低等级
+					LevelMax：输出日志的最高等级
+				@param value 属性值
+					日志的级别分五种，但log4j只建议使用四种，优先级由高到低分别是ERROR、WARN、INFO、DEBUG。
+					ERROR：产生的错误不影响系统运行
+					WARN：潜在错误
+					INFO：消息在粗粒度级别上突出强调应用程序的运行过程
+					DEBUG：细粒度信息事件对调试应用程序是十分有帮助的
+	-logger：指定需要输出日志的程序
+		@param name：程序所在的路径
+		@param additivity：是否允许信息流反馈给root。如果为true，那么日志信息会在logger打印一边，然后反馈给root再打印一遍
+		-level：指定输出的日志最低级别
+			@param value 输出日志的最低级别
+		-appender-ref：指定输出方式。通过appender的name属性指定
+			@param ref appender的name属性
+	-category[弃用，由logger代替]：指定需要输出日志的程序
+		@param name 程序所在的路径
+		@param priority 指定输出的日志最低级别
+		-appender-ref：指定输出方式。通过appender的name属性指定
+			@param ref appender的name属性
+	-root：搜集下面反馈上来的信息流并输出到指定的地方
+		-priority：指定输出日志的最低级别
+			@param value 输出日志的最低级别
+		-appender-ref：指定输出方式
+			@param ref appender的name属性
+********** ********** ********** ********** ********** ********** ********** ********** ********** ********** ********** **********
+ -->
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+	<appender name="consoleLog" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss SSS}[%t] %C{1}[%L] - %m%n"/>
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">  
+			<param name="LevelMin" value="DEBUG" />
+			<param name="LevelMax" value="ERROR" />
+		</filter>
+	</appender>
+	
+	<logger name="chngzhen.core" additivity="false">
+		<level value="DEBUG"></level>
+		<appender-ref ref="consoleLog"></appender-ref>
+	</logger>
+	
+	<logger name="org" additivity="false">
+		<level value="info"></level>
+		<appender-ref ref="consoleLog"></appender-ref>
+	</logger>
+	
+	<root>
+		<priority value="debug"/>
+		<appender-ref ref="consoleLog"/>
+	</root>
+</log4j:configuration>
