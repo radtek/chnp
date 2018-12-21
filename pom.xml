@@ -16,6 +16,8 @@
 	</modules>
 
 	<properties>
+		<!-- MySQL驱动默认版本 -->
+		<mysql.driver.version>6.0.5</mysql.driver.version>
 		<!-- Ali Json工具默认版本 -->
 		<ali.json.version>1.2.49</ali.json.version>
 		<!-- SLF-LOG4J日志框架默认版本 -->
@@ -24,6 +26,12 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<!-- 数据库连接驱动：MySQL -->
+			<dependency>
+				<groupId>mysql</groupId>
+				<artifactId>mysql-connector-java</artifactId>
+				<version>${mysql.driver.version}</version>
+			</dependency>
 			<!-- 日志框架：slf4j-log4j12 -->
 			<dependency>
 				<groupId>org.slf4j</groupId>
