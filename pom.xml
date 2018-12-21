@@ -12,6 +12,7 @@
 	<modules>
 		<module>chnp-redistool</module>
 		<module>chnp-common</module>
+		<module>chnp-hibernate</module>
 	</modules>
 
 	<properties>
