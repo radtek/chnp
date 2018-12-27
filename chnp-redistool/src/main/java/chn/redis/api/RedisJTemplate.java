@@ -257,6 +257,19 @@ public abstract class RedisJTemplate {
 		}
 	}
 
+	/**<p>对HashMap的指定字段做加法运算。</p>
+	 *
+	 * @param key 键名
+	 * @param field 字段名
+	 * @param num 数字。可以为负。
+	 * @throws Exception
+	 */
+	public void hmInc(String key, String field, long num) throws Exception {
+		try (Jedis jedis = getClient(key).getResource()) {
+			jedis.hincrBy(key, field, num);
+		}
+	}
+
 
 	public void set(String key, String value) throws Exception {
 		set(key, value, null);
