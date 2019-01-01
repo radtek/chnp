@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+		"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+	<session-factory>
+		<property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+		<property name="hibernate.connection.username">acs</property>
+		<property name="hibernate.connection.password">acs</property>
+		<property name="hibernate.connection.url">jdbc:mysql://192.168.20.48:3306/acs?useUnicode=true&amp;characterEncoding=UTF-8&amp;oldsyntax=true&amp;serverTimezone=GMT%2B8</property>
+		<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+
+		<property name="hibernate.hbm2ddl.auto">update</property>
+		<!-- 在控制台输出运行时生成的SQL语句，方便调试 -->
+		<property name="show_sql">true</property>
+		<!-- 连接池大小 -->
+		<property name="connection.pool_size">1</property>
+		<!-- 列出所有映射文件 -->
+		<mapping resource="mappings/tsarea.hbm.xml" />
+	</session-factory>
+</hibernate-configuration>

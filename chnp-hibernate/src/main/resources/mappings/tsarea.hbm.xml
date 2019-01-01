@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-3-16 9:16:18 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+	<class name="chn.hib.test.model.domain.TsArea" table="ts_area">
+		<id name="areaId" type="int">
+			<column name="area_id" />
+			<generator class="assigned" />
+		</id>
+		<property name="areaCode" type="java.lang.String">
+			<column name="area_code" />
+		</property>
+		<property name="areaName" type="java.lang.String">
+			<column name="area_name" />
+		</property>
+		<property name="parentId" type="int">
+			<column name="parent_id" />
+		</property>
+		<property name="parentCode" type="java.lang.String">
+			<column name="parent_code" />
+		</property>
+	</class>
+</hibernate-mapping>

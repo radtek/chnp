@@ -11,5 +11,31 @@
 
 	<artifactId>chnp-hibernate</artifactId>
 
+	<properties>
+		<!-- Hibernate默认版本 -->
+		<hib.version>5.0.1.Final</hib.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>cng.projects</groupId>
+			<artifactId>cng-common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<!-- 数据库连接驱动：MySQL Connector Driver -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+
+		<!-- ORM框架：Hibernate，负责映射数据库数据与对象 -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>${hib.version}</version>
+		</dependency>
+
+	</dependencies>
 
 </project>
