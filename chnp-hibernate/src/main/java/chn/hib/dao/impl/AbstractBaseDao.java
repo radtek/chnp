@@ -1,5 +1,6 @@
 package chn.hib.dao.impl;
 
+import chn.hib.annotation.Where;
 import chn.hib.common.CommonQuery;
 import chn.hib.dao.BaseDao;
 import org.hibernate.Session;
@@ -90,7 +91,7 @@ public abstract class AbstractBaseDao<E> implements BaseDao<E> {
 						.append(tableName)
 						.append(".")
 						.append(field.getAnnotation(Where.class).column())
-						.append(field.getAnnotation(Where.class).operation())
+						.append(field.getAnnotation(Where.class).operator())
 						.append(":")
 						.append(field.getName())
 						.append(" ");
@@ -101,7 +102,6 @@ public abstract class AbstractBaseDao<E> implements BaseDao<E> {
 		if (null != commonQuery.getAdditionalFilters() && !"".equals(commonQuery.getAdditionalFilters())) {
 			where.append(commonQuery.getAdditionalFilters());
 		}
-		where.append(commonQuery.getOrderCondition()).append(commonQuery.getAdditionalHandler());
 
 		return where.toString();
 	}

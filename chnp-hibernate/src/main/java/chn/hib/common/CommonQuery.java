@@ -13,4 +13,8 @@ public class CommonQuery {
 		}
 	}
 
+	private String additionalFilters = "";
+	public String getAdditionalFilters() {
+		return additionalFilters;
+	}
 }
