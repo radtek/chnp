@@ -22,6 +22,7 @@
 		<ali.json.version>1.2.49</ali.json.version>
 		<!-- SLF-LOG4J日志框架默认版本 -->
 		<slf4j.version>1.7.21</slf4j.version>
+		<http.version>4.5.6</http.version>
 	</properties>
 
 	<dependencyManagement>
@@ -43,6 +44,12 @@
 				<groupId>com.alibaba</groupId>
 				<artifactId>fastjson</artifactId>
 				<version>${ali.json.version}</version>
+			</dependency>
+			<!-- HTTP客户端工具：HttpClient -->
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpclient</artifactId>
+				<version>${http.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
