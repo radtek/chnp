@@ -270,22 +270,6 @@ public abstract class RedisJTemplate {
 		}
 	}
 
-	/**<p>批量缓存</p>
-	 *
-	 * @param prefix 键名前缀。根据键名前缀选择Redis客户端实例，并结合主键拼接键名。
-	 * @param keyName 主键参数。例如，键名CpeInfo-001由前缀CpeInfo-和主键001组成，主键001在Map中的参数是hostId。
-	 * @param dataset 数据集。HashMap数据集。
-	 * @throws Exception
-	 */
-	public void batch(String prefix, String keyName, List<Map<String, String>> dataset) throws Exception {
-		try (Jedis jedis = getClient(prefix).getResource();
-			 Pipeline pipeline = jedis.pipelined()) {
-			for (Map<String, String> data : dataset) {
-				pipeline.hmset(prefix + data.get(keyName), data);
-			}
-			pipeline.sync();
-		}
-	}
 
 	public void set(String key, String value) throws Exception {
 		set(key, value, null);
@@ -361,6 +345,24 @@ public abstract class RedisJTemplate {
 		}
 	}
 
+	/**<p>批量缓存</p>
+	 *
+	 * @param prefix 键名前缀。根据键名前缀选择Redis客户端实例，并结合主键拼接键名。
+	 * @param keyName 主键参数。例如，键名CpeInfo-001由前缀CpeInfo-和主键001组成，主键001在Map中的参数是hostId。
+	 * @param dataset 数据集。HashMap数据集。
+	 * @throws Exception
+	 */
+	public void batch(String prefix, String keyName, List<Map<String, String>> dataset) throws Exception {
+		try (Jedis jedis = getClient(prefix).getResource();
+			Pipeline pipeline = jedis.pipelined()) {
+			for (Map<String, String> data : dataset) {
+				pipeline.hmset(prefix + data.get(keyName), data);
+			}
+			pipeline.sync();
+			pipeline.close();
+		}
+	}
+
 	/**<p>根据通配格式批量查询键名。其中，通配符包括：</p>
 	 * <ul>
 	 *     <li>? - 通配单个字符</li>
@@ -387,6 +389,22 @@ public abstract class RedisJTemplate {
 		try (Jedis jedis = getClient(key).getResource()) {
 			return jedis.exists(key);
 		}
+	}
+
+	public List<Boolean> batchExist(String prefix, List<String> keys) throws Exception {
+		List<Response<Boolean>> responses = new ArrayList<>(keys.size());
+		try(Jedis jedis = getClient(prefix).getResource();
+			Pipeline pipeline = jedis.pipelined()) {
+			for (String key : keys)
+				responses.add(pipeline.exists(key));
+			pipeline.sync();
+			pipeline.close();
+		}
+
+		List<Boolean> results = new ArrayList<>(responses.size());
+		for (Response<Boolean> response : responses)
+			results.add(response.get());
+		return results;
 	}
 
 	/**<p>缓存Java对象。注意：如果缓存已存在，会覆盖掉相同的字段。</p>

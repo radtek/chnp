@@ -72,34 +72,47 @@ public class RedisJAgent extends RedisJTemplate {
 			{
 				add(new HashMap<String, String>() {
 					{
-						put(RedisJPool.CONFIG_HOST, "192.168.21.31");
+						put(RedisJPool.CONFIG_HOST, "192.168.21.32");
 					}
 				});
 			}
 		};
 		Map<String, String> mappings = new HashMap<String, String>() {
 			{
-				put("TestInfo", "192.168.21.31");
+				put("TestInfo", "192.168.21.32");
 			}
 		};
 
 		RedisJAgent agent = new RedisJAgent(configs, mappings);
 
-		agent.set("TestInfo-2", "TestInfo1");
-
-		configs.add(new HashMap<String, String>() {
+		agent.batch("TestInfo-", "id", new ArrayList<Map<String, String>>() {
 			{
-				put(RedisJPool.CONFIG_HOST, "192.168.21.32");
+				add(new HashMap<String, String>() {
+					{
+						put("id", "1");
+					}
+				});
+				add(new HashMap<String, String>() {
+					{
+						put("id", "2");
+					}
+				});
 			}
 		});
-		mappings.put("TestInfo", "192.168.21.32");
 
-		agent.refresh(configs, mappings);
-
-		agent.set("TestInfo-2", "TestInfo11");
+//		configs.add(new HashMap<String, String>() {
+//			{
+//				put(RedisJPool.CONFIG_HOST, "192.168.21.32");
+//			}
+//		});
+//		mappings.put("TestInfo", "192.168.21.32");
+//
+//		agent.refresh(configs, mappings);
+//
+//		agent.set("TestInfo-2", "TestInfo111");
 
 		agent.close();
-		agent.set("TestInfo-0000001", "TestCpeInfo011");
+//		agent.set("TestInfo-0000001", "TestCpeInfo011");
 	}
 
 
