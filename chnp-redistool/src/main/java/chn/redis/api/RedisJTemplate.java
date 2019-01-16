@@ -2,10 +2,7 @@ package chn.redis.api;
 
 import chn.redis.exception.RedisJException;
 import com.alibaba.fastjson.JSONObject;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.Pipeline;
-import redis.clients.jedis.Response;
+import redis.clients.jedis.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -267,6 +264,55 @@ public abstract class RedisJTemplate {
 	public void hmInc(String key, String field, long num) throws Exception {
 		try (Jedis jedis = getClient(key).getResource()) {
 			jedis.hincrBy(key, field, num);
+		}
+	}
+
+	/**<p>批量获取HashMap数据。</p>
+	 *
+	 * @param pattern 键名格式。例如：CpeInfo-*。注意：该格式必须包括键名前缀，否则无法获取到具体的Redis客户端。
+	 * @param fieldName 查询的字段
+	 * @return 查询结果。
+	 * @throws Exception
+	 */
+	public Map<String, List<String>> hmFind(String pattern, String... fieldName) throws Exception {
+		return hmFind(pattern, 10000, fieldName);
+	}
+
+	/**<p>批量获取HashMap数据。</p>
+	 *
+	 * @param pattern 键名格式。例如：CpeInfo-*。注意：该格式必须包括键名前缀，否则无法获取到具体的Redis客户端。
+	 * @param limit 分页长度。默认10000。注意：该值受限于单数据尺寸、服务端内存大小、Socket Output缓冲区大小。
+	 * @param fieldName 查询的字段
+	 * @return 查询结果。
+	 * @throws Exception
+	 */
+	public Map<String, List<String>> hmFind(String pattern, int limit, String... fieldName) throws Exception {
+		try (Jedis jedis = getClient(pattern).getResource()) {
+			Map<String, List<String>> result = new HashMap<>();
+
+			ScanParams params = new ScanParams();
+			params.count(limit);
+
+			String cursor = "-1";
+			while (!"0".equals(cursor)) {
+				ScanResult<String> scanResult = jedis.scan("-1".equals(cursor) ? "0" : cursor, params);
+				List<String> keys = scanResult.getResult();
+				cursor = scanResult.getStringCursor();
+
+				List<Response<List<String>>> responses = new ArrayList<>(keys.size());
+				Pipeline pipeline = jedis.pipelined();
+				for (String key : keys) {
+					responses.add(pipeline.hmget(key, fieldName));
+				}
+				pipeline.sync();
+				pipeline.close();
+				System.out.println("--------------------" + responses.size());
+
+				for (int i=0; i<keys.size(); i++) {
+					result.put(keys.get(i), responses.get(i).get());
+				}
+			}
+			return result;
 		}
 	}
 

@@ -72,33 +72,36 @@ public class RedisJAgent extends RedisJTemplate {
 			{
 				add(new HashMap<String, String>() {
 					{
-						put(RedisJPool.CONFIG_HOST, "192.168.21.32");
+						put(RedisJPool.CONFIG_HOST, "192.168.21.31");
 					}
 				});
 			}
 		};
 		Map<String, String> mappings = new HashMap<String, String>() {
 			{
-				put("TestInfo", "192.168.21.32");
+				put("CpeInfo", "192.168.21.31");
 			}
 		};
 
 		RedisJAgent agent = new RedisJAgent(configs, mappings);
 
-		agent.batch("TestInfo-", "id", new ArrayList<Map<String, String>>() {
-			{
-				add(new HashMap<String, String>() {
-					{
-						put("id", "1");
-					}
-				});
-				add(new HashMap<String, String>() {
-					{
-						put("id", "2");
-					}
-				});
-			}
-		});
+		agent.hmFind("CpeInfo-*", 10000, "bootAnimationId", "" +
+				"");
+
+//		agent.batch("TestInfo-", "id", new ArrayList<Map<String, String>>() {
+//			{
+//				add(new HashMap<String, String>() {
+//					{
+//						put("id", "1");
+//					}
+//				});
+//				add(new HashMap<String, String>() {
+//					{
+//						put("id", "2");
+//					}
+//				});
+//			}
+//		});
 
 //		configs.add(new HashMap<String, String>() {
 //			{
