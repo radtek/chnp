@@ -13,6 +13,7 @@
 		<module>chnp-redistool</module>
 		<module>chnp-common</module>
 		<module>chnp-hibernate</module>
+		<module>chnp-hsqldb</module>
 	</modules>
 
 	<properties>
