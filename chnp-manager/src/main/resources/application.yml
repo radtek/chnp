@@ -1,0 +1,16 @@
+server:
+  port: 8088
+spring:
+  mvc:
+    static-path-pattern: /assets/**
+  freemarker:
+    template-loader-path: classpath:/pages
+  datasource:
+    url: jdbc:mysql://localhost:3306/chngzhen?useUnicode=true&characterEncoding=utf8&pinGlobalTxToPhysicalConnection=true&useSSL=false&serverTimezone=UTC
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+mybatis:
+  type-aliases-package: chnp.manager.model.domain
+  mapper-locations: classpath:mappers/*.xml

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="chnp.manager.dao.TsUserDao">
+	<resultMap id="BaseResultMap" type="chnp.manager.model.domain.TsUser">
+		<id property="id" column="id" jdbcType="INTEGER"/>
+		<result property="userName" column="user_name" jdbcType="VARCHAR"/>
+		<result property="userPswd" column="user_pswd" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<sql id="columns">
+		id, user_name, user_pswd
+	</sql>
+
+	<sql id="where">
+		<trim prefix="where" suffixOverrides="and">
+			<if test="id != null"><![CDATA[ ts_user.id = #{id,jdbcType=INTEGER} and ]]></if>
+			<if test="userName != null and userName != ''"><![CDATA[ ts_user.user_name = #{userName,jdbcType=VARCHAR} and ]]></if>
+			<if test="userPswd != null and userPswd != ''"><![CDATA[ ts_user.user_pswd = #{userPswd,jdbcType=VARCHAR} and ]]></if>
+			<if test="search != null and search != ''">
+				<![CDATA[
+			        (
+						LOWER(ts_user.user_name) LIKE LOWER(concat('%',#{search,jdbcType=VARCHAR},'%'))
+			        ) and
+			    ]]>
+			</if>
+			<if test="filterCondition != null and filterCondition != ''"><![CDATA[ ${filterCondition} and]]></if>
+		</trim>
+	</sql>
+	
+	<select id="getByCondition" resultMap="BaseResultMap">
+		SELECT <include refid="columns"/>
+		FROM ts_user
+		<include refid="where"/>
+	</select>
+</mapper>
