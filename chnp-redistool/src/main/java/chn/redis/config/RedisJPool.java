@@ -20,6 +20,7 @@ public class RedisJPool {
 	public static final String CONFIG_MAX_WAIT_MILLIS = "maxWaitMillis";
 	public static final String CONFIG_TEST_ON_BORROW = "testOnBorrow";
 	public static final String CONFIG_TEST_ON_RETURN = "testOnReturn";
+	public static final String CONFIG_READ_TIMEOUT = "readTimeout";
 
 	/**<p>Redis客户端池</p>
 	 * <p>
@@ -76,9 +77,9 @@ public class RedisJPool {
 			if (!this.clients.containsKey(initial.getHost())) {
 				this.clients.put(
 						initial.getHost(),
-						new JedisPool(initial, initial.getHost(), initial.getPort())
+						new JedisPool(initial, initial.getHost(), initial.getPort(), initial.getProtocolTimeout())
 				);
-				log.info("IP为{}的Redis服务被添加！客户端已生成！！", initial.getHost());
+				log.info("IP为" + initial.getHost() + "的Redis服务被添加！客户端已生成！！");
 			}
 		}
 
@@ -114,18 +115,19 @@ public class RedisJPool {
 				if (!client.isClosed()) client.close();
 				hostClosed.add(host);
 
-				log.info("IP为{}的Redis服务客户端已被关闭！！", host);
+				log.info("IP为" + host + "的Redis服务客户端已被关闭！！");
 			}
 		}
 
 		for (String host : hostClosed) this.clients.remove(host);
-		log.info("Redis客户端池长度：{}", this.clients.size());
+		log.info("Redis客户端池长度：" + this.clients.size());
 	}
 
 	private RedisJInitial create(Map<String, String> config) {
 		RedisJInitial redisJInitial = new RedisJInitial();
 		redisJInitial.setHost(config.get(CONFIG_HOST));
 		redisJInitial.setPort(config.get(CONFIG_PORT));
+		redisJInitial.setProtocolTimeout(config.get(CONFIG_READ_TIMEOUT));
 		redisJInitial.setMaxTotal(config.get(CONFIG_MAXT_TOTAL));
 		redisJInitial.setMaxIdle(config.get(CONFIG_MAX_IDLE));
 		redisJInitial.setMinIdle(config.get(CONFIG_MIN_IDLE));

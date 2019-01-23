@@ -6,6 +6,7 @@ public class RedisJInitial extends JedisPoolConfig {
 
 	private String host = "localhost";
 	private Integer port = 6379;
+	private Integer protocolTimeout = 2000;
 
 	public String getHost() {
 		return host;
@@ -24,6 +25,16 @@ public class RedisJInitial extends JedisPoolConfig {
 	public void setPort(String port) {
 		if (null != port && !"".equals(port.trim())) {
 			this.port = Integer.valueOf(port);
+		}
+	}
+
+	public Integer getProtocolTimeout() {
+		return protocolTimeout;
+	}
+
+	public void setProtocolTimeout(String protocolTimeout) {
+		if (null != protocolTimeout && !"".equals(protocolTimeout.trim())) {
+			this.protocolTimeout = Integer.valueOf(protocolTimeout.trim());
 		}
 	}
 

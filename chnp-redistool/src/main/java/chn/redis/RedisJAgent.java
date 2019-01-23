@@ -20,6 +20,7 @@ public class RedisJAgent extends RedisJTemplate {
 	 *     <ul>
 	 *         <li>host：Redis服务器的主机。默认：localhost</li>
 	 *         <li>port：Redis服务器的端口。默认：6379</li>
+	 *         <li>readTimeout：Socket读取输入流的超时时长。默认：2000.单位：毫秒</li>
 	 *         <li>maxTotal：每个Redis客户端的资源池允许的最大连接数。默认：8</li>
 	 *         <li>maxIdle：每个Redis客户端的资源池允许的最大空闲连接数。默认：8。并发量较大的情况下，建议与maxTotal保持一致，以避免创建连接的开销。</li>
 	 *         <li>minIdle：每个Redis客户端的资源池允许的最小空闲连接数。默认：0</li>
@@ -79,43 +80,34 @@ public class RedisJAgent extends RedisJTemplate {
 		};
 		Map<String, String> mappings = new HashMap<String, String>() {
 			{
-				put("CpeInfo", "192.168.21.31");
+				put("HasDoneCpe", "192.168.21.31");
 			}
 		};
 
+		// 首次初始化客户端池
 		RedisJAgent agent = new RedisJAgent(configs, mappings);
+		long start = System.currentTimeMillis();
+		agent.sexist("HasDoneCpe-" + 99, "0000030000056800SY0H1077B0AF9278");
+		System.out.println(
+				System.currentTimeMillis() - start
+		);
+		/*agent.set("TestInfo-2", "TestInfo1");
 
-		agent.hmFind("CpeInfo-*", 10000, "bootAnimationId", "" +
-				"");
+		configs.add(new HashMap<String, String>() {
+			{
+				put(RedisJPool.CONFIG_HOST, "192.168.21.32");
+			}
+		});
+		mappings.put("TestInfo", "192.168.21.32");
 
-//		agent.batch("TestInfo-", "id", new ArrayList<Map<String, String>>() {
-//			{
-//				add(new HashMap<String, String>() {
-//					{
-//						put("id", "1");
-//					}
-//				});
-//				add(new HashMap<String, String>() {
-//					{
-//						put("id", "2");
-//					}
-//				});
-//			}
-//		});
+		// 刷新客户端池
+		agent.refresh(configs, mappings);
 
-//		configs.add(new HashMap<String, String>() {
-//			{
-//				put(RedisJPool.CONFIG_HOST, "192.168.21.32");
-//			}
-//		});
-//		mappings.put("TestInfo", "192.168.21.32");
-//
-//		agent.refresh(configs, mappings);
-//
-//		agent.set("TestInfo-2", "TestInfo111");
+		agent.set("TestInfo-2", "TestInfo11");
 
+		// 关闭客户端池
 		agent.close();
-//		agent.set("TestInfo-0000001", "TestCpeInfo011");
+		agent.set("TestInfo-0000001", "TestCpeInfo011");*/
 	}
 
 
