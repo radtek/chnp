@@ -22,7 +22,7 @@ import java.util.Map;
  *     <li>HQL：该类方法带有{@code InHql}后缀；</li>
  *     <li>SQL：该类方法带有{@code InSql}后缀。</li>
  * </ul>
- * <p>注意：本实现类基于Hibernate 5.0版本，与5.2及以下版本存在差异。</p>
+ * <p>注意：本实现类基于Hibernate 5.0版本，与5.0及以下版本存在差异。</p>
  *
  * @CreateBy chngzhen@outlook.com
  * @CreateOn 2018-11-06

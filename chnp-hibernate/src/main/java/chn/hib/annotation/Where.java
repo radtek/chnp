@@ -13,4 +13,6 @@ public @interface Where {
 
     SQLOperator operator() default SQLOperator.EQUAL;
 
+    boolean isFuzzy() default false;
+
 }
