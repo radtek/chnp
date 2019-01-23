@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: jdbc:mysql://192.168.21.38:3306/acs_dev?useUnicode=true&characterEncoding=utf8&pinGlobalTxToPhysicalConnection=true&useSSL=false&serverTimezone=UTC
+    username: acs
+    password: acs
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+  jpa:
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: validate
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    show-sql: true
