@@ -11,6 +11,8 @@ spring:
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
+  aop:
+    proxy-target-class: false
 mybatis:
   type-aliases-package: chnp.manager.model.domain
   mapper-locations: classpath:mappers/*.xml

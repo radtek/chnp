@@ -24,6 +24,7 @@ public class LoginController {
 
 	@RequestMapping("/login")
 	public String login() {
+		if (true) throw new RuntimeException("ceshi");
 		return "login";
 	}
 
