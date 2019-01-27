@@ -58,7 +58,7 @@ public class VerificationCode {
 		return codeSequence;
 	}
 
-	private String codeString;// 验证码
+	private String codeString = "";// 验证码
 
 	private BufferedImage bufferedImage;// 验证码图片
 
@@ -97,7 +97,7 @@ public class VerificationCode {
 			String code = String.valueOf(codeSequence[random.nextInt(codeSequence.length-1)]);
 			gd.setColor(new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255)));
 			gd.drawString(code, (i + 1) * 15, (height - fontHeight) / 2 + fontHeight);
-			this.codeString+=code;
+			this.codeString += code;
 		}
 	}
 

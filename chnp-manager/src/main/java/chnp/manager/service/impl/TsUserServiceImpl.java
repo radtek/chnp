@@ -21,4 +21,11 @@ public class TsUserServiceImpl implements TsUserService {
 		query.setId(id);
 		return tsUserDao.getByCondition(query);
 	}
+
+	@Override
+	public TsUser getByUserName(String userName) {
+		TsUserQuery query = new TsUserQuery();
+		query.setUserName(userName);
+		return tsUserDao.getByCondition(query);
+	}
 }

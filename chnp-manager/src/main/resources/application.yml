@@ -3,6 +3,8 @@ server:
 spring:
   mvc:
     static-path-pattern: /assets/**
+  resources:
+    static-locations: classpath:/assets/
   freemarker:
     template-loader-path: classpath:/pages
   datasource:
@@ -11,6 +13,8 @@ spring:
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
+  aop:
+    proxy-target-class: false
 mybatis:
   type-aliases-package: chnp.manager.model.domain
   mapper-locations: classpath:mappers/*.xml
