@@ -1,4 +1,4 @@
-package chnp.manager.common.utils;
+package chnp.common.utils;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -11,17 +11,23 @@ public class StringUtil {
     };
 
     public static void main(String[] args) {
-        try {
-            System.out.println(MD5Encode("123456", null));
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+//        try {
+            System.out.println(areNotEmpty("123456", "1"));
+//        } catch (NoSuchAlgorithmException e) {
+//            e.printStackTrace();
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public static boolean isEmpty(String str) {
         return null == str || str.trim().isEmpty();
+    }
+
+    public static boolean areNotEmpty(String... strs) {
+        boolean areNotEmpty = true;
+        for (int i=0; areNotEmpty && i<strs.length; i++) areNotEmpty = !isEmpty(strs[i]);
+        return areNotEmpty;
     }
 
     public static String MD5Encode(String origin) throws UnsupportedEncodingException, NoSuchAlgorithmException {
