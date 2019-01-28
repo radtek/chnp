@@ -20,7 +20,7 @@
 
 	<properties>
 		<!-- MySQL驱动默认版本 -->
-		<mysql.driver.version>6.0.5</mysql.driver.version>
+		<mysql.driver.version>8.0.13</mysql.driver.version>
 		<druid.version>1.1.12</druid.version>
 		<!-- Ali Json工具默认版本 -->
 		<ali.json.version>1.2.49</ali.json.version>

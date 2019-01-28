@@ -3,6 +3,8 @@ server:
 spring:
   mvc:
     static-path-pattern: /assets/**
+  resources:
+    static-locations: classpath:/assets/
   freemarker:
     template-loader-path: classpath:/pages
   datasource:

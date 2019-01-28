@@ -6,4 +6,6 @@ public interface TsUserService {
 
 	TsUser getById(Integer id);
 
+	TsUser getByUserName(String userName);
+
 }

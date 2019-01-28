@@ -63,9 +63,11 @@
                 </div>
                 <div>
                     <label>验证码：</label>
-                    <div style="display: flex;">
-                        <input style="flex: 1 1 auto;" name="verifycode" type="text" title="" />
-                        <img onclick="this.src='http://127.0.0.1:8088/verification?width=80&height=30&d=' + Math.random();" src="http://127.0.0.1:8088/verification?width=80&height=30"/>
+                    <div style="display: flex;flex-flow: row wrap;justify-content: space-between;">
+                        <div style="flex: 1 1 auto;">
+                            <input name="verifycode" type="text" title="" />
+                        </div>
+                        <img onclick="this.src='/verification?width=80&height=30&d=' + Math.random();" src="/verification?width=80&height=30"/>
                     </div>
                 </div>
                 <div>
@@ -75,7 +77,36 @@
             <div></div>
         </div>
 
+        <#include "./common/scripts.ftl"/>
+        <script src="/assets/plugins/md5/md5.min.js"></script>
         <script>
+            $(function() {
+
+                $("#btnLogining").on("click", function(e) {
+                    e.preventDefault();
+
+                    var vericode = $("input[name='verifycode']").val().toLowerCase();
+                    var pswd = md5(md5($("input[name='password']").val()) + vericode);
+                    $.ajax({
+                        type: "POST",
+                        url: "/logining",
+                        data: {
+                            "username": $("input[name='username']").val(),
+                            "userpswd": pswd,
+                            "vericode": vericode
+                        },
+                        dataType: "json",
+                        success: function(json) {
+                            if (1 === json.returnCode) {}
+                            else {}
+                        },
+                        error: function() {
+
+                        }
+                    });
+                });
+
+            })
 
         </script>
     </body>
