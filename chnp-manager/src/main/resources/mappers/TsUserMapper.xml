@@ -13,13 +13,13 @@
 
 	<sql id="where">
 		<trim prefix="where" suffixOverrides="and">
-			<if test="id != null"><![CDATA[ ts_user.id = #{id,jdbcType=INTEGER} and ]]></if>
-			<if test="userName != null and userName != ''"><![CDATA[ ts_user.user_name = #{userName,jdbcType=VARCHAR} and ]]></if>
-			<if test="userPswd != null and userPswd != ''"><![CDATA[ ts_user.user_pswd = #{userPswd,jdbcType=VARCHAR} and ]]></if>
+			<if test="id != null"><![CDATA[ ts_user.id = #{id, jdbcType=INTEGER} and ]]></if>
+			<if test="userName != null and userName != ''"><![CDATA[ ts_user.user_name = #{userName, jdbcType=VARCHAR} and ]]></if>
+			<if test="userPswd != null and userPswd != ''"><![CDATA[ ts_user.user_pswd = #{userPswd, jdbcType=VARCHAR} and ]]></if>
 			<if test="search != null and search != ''">
 				<![CDATA[
 			        (
-						LOWER(ts_user.user_name) LIKE LOWER(concat('%',#{search,jdbcType=VARCHAR},'%'))
+						LOWER(ts_user.user_name) like LOWER(concat('%',#{search, jdbcType=VARCHAR},'%'))
 			        ) and
 			    ]]>
 			</if>
@@ -28,8 +28,8 @@
 	</sql>
 	
 	<select id="getByCondition" resultMap="BaseResultMap">
-		SELECT <include refid="columns"/>
-		FROM ts_user
+		select <include refid="columns"/>
+		from ts_user
 		<include refid="where"/>
 	</select>
 </mapper>

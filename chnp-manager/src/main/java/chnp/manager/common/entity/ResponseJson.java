@@ -1,4 +1,4 @@
-package chnp.manager.common;
+package chnp.manager.common.entity;
 
 import com.alibaba.fastjson.JSONObject;
 

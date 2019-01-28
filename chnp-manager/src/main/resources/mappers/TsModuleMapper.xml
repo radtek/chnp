@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="chnp.manager.dao.TsModuleDao">
+	<resultMap id="BaseResultMap" type="chnp.manager.model.domain.TsModule">
+		<id property="id" column="id" jdbcType="INTEGER"/>
+		<result property="name" column="name" jdbcType="VARCHAR"/>
+		<result property="type" column="type" jdbcType="INTEGER"/>
+		<result property="url" column="url" jdbcType="VARCHAR"/>
+		<result property="target" column="target" jdbcType="INTEGER"/>
+		<result property="parentId" column="parent_id" jdbcType="INTEGER"/>
+		<result property="level" column="level" jdbcType="INTEGER"/>
+		<result property="icon" column="icon" jdbcType="VARCHAR"/>
+		<result property="authName" column="auth_name" jdbcType="VARCHAR"/>
+		<result property="sort" column="sort" jdbcType="INTEGER"/>
+		<result property="rootId" column="root_id" jdbcType="INTEGER"/>
+		<result property="isParent" column="is_parent" jdbcType="INTEGER"/>
+	</resultMap>
+
+	<sql id="columns">
+		id, name, type, url, target, parent_id, level, icon, auth_name, sort, root_id, is_parent
+	</sql>
+
+	<sql id="where">
+		<trim prefix="where" suffixOverrides="and">
+			<if test="id != null"><![CDATA[ ts_module.id = #{id, jdbcType=INTEGER} and ]]></if>
+			<if test="name != null and name != ''"><![CDATA[ ts_module.user_name = #{name, jdbcType=VARCHAR} and ]]></if>
+			<if test="type != null"><![CDATA[ ts_module.type = #{type, jdbcType=INTEGER} and ]]></if>
+			<if test="url != null and url != ''"><![CDATA[ ts_module.url = #{url, jdbcType=VARCHAR} and ]]></if>
+			<if test="target != null"><![CDATA[ ts_module.target = #{target, jdbcType=INTEGER} and ]]></if>
+			<if test="parentId != null"><![CDATA[ ts_module.parent_id = #{parentId, jdbcType=INTEGER} and ]]></if>
+			<if test="level != null"><![CDATA[ ts_module.level = #{level, jdbcType=INTEGER} and ]]></if>
+			<if test="icon != null and icon != ''"><![CDATA[ ts_module.icon = #{icon, jdbcType=VARCHAR} and ]]></if>
+			<if test="authName != null and authName != ''"><![CDATA[ ts_module.auth_name = #{authName, jdbcType=VARCHAR} and ]]></if>
+			<if test="sort != null"><![CDATA[ ts_module.sort = #{sort, jdbcType=INTEGER} and ]]></if>
+			<if test="rootId != null"><![CDATA[ ts_module.root_id = #{rootId, jdbcType=INTEGER} and ]]></if>
+			<if test="isParent != null"><![CDATA[ ts_module.is_parent = #{isParent, jdbcType=INTEGER} and ]]></if>
+			<if test="search != null and search != ''">
+				<![CDATA[
+			        (
+						lower(ts_module.name) like lower(concat('%',#{search, jdbcType=VARCHAR},'%')) or
+						lower(ts_module.auth_name) like lower(concat('%',#{search, jdbcType=VARCHAR},'%'))
+			        ) and
+			    ]]>
+			</if>
+			<if test="filterCondition != null and filterCondition != ''"><![CDATA[ ${filterCondition} and]]></if>
+		</trim>
+		<if test="orderCondition != null and orderCondition != ''"><![CDATA[ order by ${orderCondition} ]]></if>
+	</sql>
+	
+	<select id="getByCondition" resultMap="BaseResultMap">
+		select <include refid="columns"/>
+		from ts_module
+		<include refid="where"/>
+	</select>
+
+	<select id="findByCondition" resultMap="BaseResultMap">
+		select <include refid="columns"/>
+		from ts_module
+		<include refid="where"/>
+	</select>
+
+</mapper>

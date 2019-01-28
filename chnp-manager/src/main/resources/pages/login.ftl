@@ -97,7 +97,7 @@
                         },
                         dataType: "json",
                         success: function(json) {
-                            if (1 === json.returnCode) {}
+                            if (1 === json.returnCode) window.location.href = "/index";
                             else {}
                         },
                         error: function() {

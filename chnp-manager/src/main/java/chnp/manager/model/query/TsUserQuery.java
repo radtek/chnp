@@ -1,6 +1,6 @@
 package chnp.manager.model.query;
 
-import chnp.manager.common.CommonQuery;
+import chnp.manager.common.entity.CommonQuery;
 
 public class TsUserQuery extends CommonQuery {
 

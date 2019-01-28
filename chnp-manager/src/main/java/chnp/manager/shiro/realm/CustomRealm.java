@@ -1,30 +1,49 @@
 package chnp.manager.shiro.realm;
 
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.UsernamePasswordToken;
+import chnp.common.utils.StringUtil;
+import chnp.manager.common.service.UtilService;
+import chnp.manager.model.domain.TsUser;
+import chnp.manager.service.TsUserService;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class CustomRealm extends AuthorizingRealm {
 
-//    @Autowired
-//    private TsUserService tsUserService;
+	@Autowired
+	private UtilService utilService;
+    @Autowired
+    private TsUserService tsUserService;
 
     /**<p>用户认证</p>
-     * <p></p>
+     * <p>
+	 *     当调用Subject.login()时会调用本方法获取指定用户的认证信息，并匹配登陆信息。
+     * </p>
      *
-     * @param authenticationToken
-     * @return
+     * @param authenticationToken 用户登陆信息
+     * @return 用户认证信息
      * @throws AuthenticationException
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
 
-        return null;
+		TsUser tsUser = tsUserService.getByUserName(token.getUsername());
+		if (null == tsUser || StringUtil.isEmpty(tsUser.getUserPswd())) throw new UnknownAccountException("账号或密码错误");
+
+		Object vericode = utilService.getSession().getAttribute("verificationCode");
+
+		String pswd;
+		try {
+			pswd = StringUtil.MD5Encode(tsUser.getUserPswd() + ((String) vericode).toLowerCase());
+		}catch (Exception e) {
+			throw new AuthenticationException("内部错误");
+		}
+
+		return new SimpleAuthenticationInfo(token.getUsername(), pswd, getName());
     }
 
     /**<p>权限验证</p>
@@ -42,10 +61,13 @@ public class CustomRealm extends AuthorizingRealm {
      * </ul>
      *
      * @param principalCollection
-     * @return
+     * @return 当前用户的角色和权限集合
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        return null;
+		SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
+		//authorizationInfo.setRoles();
+		//authorizationInfo.setStringPermissions();
+        return authorizationInfo;
     }
 }

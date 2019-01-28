@@ -1,11 +1,13 @@
 package chnp.manager.controller;
 
 import chnp.common.utils.StringUtil;
-import chnp.manager.common.ResponseJson;
+import chnp.manager.common.entity.ResponseJson;
 import chnp.manager.common.VerificationCode;
 import chnp.manager.common.service.UtilService;
-import chnp.manager.model.domain.TsUser;
 import chnp.manager.service.TsUserService;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.session.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +33,6 @@ public class LoginController {
 
 	@RequestMapping("/login")
 	public String login() {
-		if (true) throw new RuntimeException("ceshi");
 		return "login";
 	}
 
@@ -39,25 +40,23 @@ public class LoginController {
 	@RequestMapping("/logining")
 	public String logining(@RequestParam(name = "username") String un,
 						   @RequestParam(name = "userpswd") String up,
-						   @RequestParam(name = "vericode") String vc,
-						   HttpServletResponse resp) throws Exception {
+						   @RequestParam(name = "vericode") String vc) throws Exception {
 		ResponseJson responseJson = new ResponseJson();
-		TsUser tsUser = tsUserService.getByUserName(un);
-		if (null == tsUser || StringUtil.isEmpty(tsUser.getUserPswd()))
-			responseJson.error("登录名或密码不正确");
+		if (StringUtil.isEmpty(un)) responseJson.error("请输入登陆账号");
+		else if (StringUtil.isEmpty(up)) responseJson.error("请输入登陆密码");
+		else if (StringUtil.isEmpty(vc)) responseJson.error("请输入验证码");
 		else {
 			Session session = utilService.getSession();
-			String vericode = (String) session.getAttribute("verificationCode");
-			if (!StringUtil.areNotEmpty(vc, vericode) || !vc.toLowerCase().equals(vericode))
-				responseJson.error("验证码不正确");
+			Object vericode = session.getAttribute("verificationCode");
+			if (null == vericode) responseJson.error("请刷新验证码");
+			else if (!vc.toLowerCase().equals(vericode)) responseJson.error("验证码不正确");
 			else {
-				String md5 = StringUtil.MD5Encode(tsUser.getUserPswd() + vericode.toLowerCase());
-				if (!md5.equals(up)) responseJson.error("登录名或密码不正确");
-				else {
-					// TODO:
-					session.setAttribute("isOnline", 1);
-
-					resp.sendRedirect("/index");
+				UsernamePasswordToken token = new UsernamePasswordToken(un, up);
+				try {
+					SecurityUtils.getSubject().login(token);
+					responseJson.success("登陆成功");
+				}catch (AuthenticationException ae) {
+					responseJson.error(ae.getMessage());
 				}
 			}
 		}

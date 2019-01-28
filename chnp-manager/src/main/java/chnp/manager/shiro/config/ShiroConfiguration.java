@@ -13,15 +13,15 @@ import java.util.Map;
 @Configuration
 public class ShiroConfiguration {
 
-//    @Bean
-//    public CustomRealm getCustomRealm() {
-//        return new CustomRealm();
-//    }
+    @Bean
+    public CustomRealm getCustomRealm() {
+        return new CustomRealm();
+    }
 
     @Bean
     public SecurityManager getSecurityManager() {
         DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
-        //manager.setRealm(getCustomRealm());
+        manager.setRealm(getCustomRealm());
         return manager;
     }
 
@@ -29,7 +29,9 @@ public class ShiroConfiguration {
     public ShiroFilterFactoryBean getFilterFactory(SecurityManager manager) {
         ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
         factoryBean.setSecurityManager(manager);
-        //factoryBean.setLoginUrl("/login");
+
+        factoryBean.setSuccessUrl("/index");
+        factoryBean.setLoginUrl("/login");
         //factoryBean.setUnauthorizedUrl("/noauth");
 
         // 配置过滤规则
