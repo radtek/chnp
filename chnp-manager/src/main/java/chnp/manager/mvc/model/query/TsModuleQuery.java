@@ -1,4 +1,4 @@
-package chnp.manager.model.query;
+package chnp.manager.mvc.model.query;
 
 import chnp.manager.common.entity.CommonQuery;
 

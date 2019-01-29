@@ -41,7 +41,7 @@ public class ShiroConfiguration {
         filterMap.put("/assets/**", "anon");
         filterMap.put("/verification", "anon");
         filterMap.put("/portal/**", "anon");
-        filterMap.put("/**", "authc");
+        filterMap.put("/**", "anon");
         factoryBean.setFilterChainDefinitionMap(filterMap);
         return factoryBean;
     }

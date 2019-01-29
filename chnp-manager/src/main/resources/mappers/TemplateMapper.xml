@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="chnp.manager.mvc.dao.TemplateDao">
+	<resultMap id="BaseResultMap" type="chnp.manager.mvc.model.domain.Template">
+		<id property="id" column="id" jdbcType="INTEGER"/>
+		<result property="orm" column="orm" jdbcType="INTEGER"/>
+		<result property="template" column="template" jdbcType="VARCHAR"/>
+		<result property="engine" column="engine" jdbcType="INTEGER"/>
+		<result property="outputFile" column="output_file" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<sql id="columns">
+		id, orm, template, engine, output_file
+	</sql>
+
+	<sql id="where">
+		<trim prefix="where" suffixOverrides="and">
+			<if test="id != null"><![CDATA[ template.id = #{id, jdbcType=INTEGER} and ]]></if>
+			<if test="orm != null"><![CDATA[ template.orm = #{orm, jdbcType=INTEGER} and ]]></if>
+			<if test="template != null and template != ''"><![CDATA[ template.template = #{template, jdbcType=VARCHAR} and ]]></if>
+			<if test="engine != null"><![CDATA[ template.engine = #{engine, jdbcType=INTEGER} and ]]></if>
+			<if test="outputFile != null and outputFile != ''"><![CDATA[ template.output_file = #{outputFile, jdbcType=VARCHAR} and ]]></if>
+			<if test="search != null and search != ''">
+				<![CDATA[
+			        (
+						LOWER(template.output_file) like LOWER(concat('%',#{search, jdbcType=VARCHAR},'%'))
+			        ) and
+			    ]]>
+			</if>
+			<if test="filterCondition != null and filterCondition != ''"><![CDATA[ ${filterCondition} and]]></if>
+		</trim>
+	</sql>
+
+</mapper>

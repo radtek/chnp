@@ -1,8 +1,7 @@
-package chnp.manager.controller;
+package chnp.manager.mvc.controller;
 
-import chnp.manager.model.domain.TsModule;
-import chnp.manager.model.query.TsModuleQuery;
-import chnp.manager.service.TsModuleService;
+import chnp.manager.mvc.service.TsModuleService;
+import chnp.manager.mvc.model.query.TsModuleQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

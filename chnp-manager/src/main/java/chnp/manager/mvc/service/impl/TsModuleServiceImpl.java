@@ -1,9 +1,9 @@
-package chnp.manager.service.impl;
+package chnp.manager.mvc.service.impl;
 
-import chnp.manager.dao.TsModuleDao;
-import chnp.manager.model.domain.TsModule;
-import chnp.manager.model.query.TsModuleQuery;
-import chnp.manager.service.TsModuleService;
+import chnp.manager.mvc.dao.TsModuleDao;
+import chnp.manager.mvc.model.domain.TsModule;
+import chnp.manager.mvc.model.query.TsModuleQuery;
+import chnp.manager.mvc.service.TsModuleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

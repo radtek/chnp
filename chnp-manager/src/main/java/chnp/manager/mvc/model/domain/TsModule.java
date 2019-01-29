@@ -1,4 +1,4 @@
-package chnp.manager.model.domain;
+package chnp.manager.mvc.model.domain;
 
 public class TsModule {
 

@@ -1,7 +1,7 @@
-package chnp.manager.dao;
+package chnp.manager.mvc.dao;
 
-import chnp.manager.model.domain.TsModule;
-import chnp.manager.model.query.TsModuleQuery;
+import chnp.manager.mvc.model.domain.TsModule;
+import chnp.manager.mvc.model.query.TsModuleQuery;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

@@ -1,6 +1,6 @@
-package chnp.manager.service;
+package chnp.manager.mvc.service;
 
-import chnp.manager.model.domain.TsUser;
+import chnp.manager.mvc.model.domain.TsUser;
 
 public interface TsUserService {
 

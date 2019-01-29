@@ -1,10 +1,10 @@
-package chnp.manager.controller;
+package chnp.manager.mvc.controller;
 
 import chnp.common.utils.StringUtil;
 import chnp.manager.common.entity.ResponseJson;
 import chnp.manager.common.VerificationCode;
 import chnp.manager.common.service.UtilService;
-import chnp.manager.service.TsUserService;
+import chnp.manager.mvc.service.TsUserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;

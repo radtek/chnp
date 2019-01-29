@@ -2,8 +2,8 @@ package chnp.manager.shiro.realm;
 
 import chnp.common.utils.StringUtil;
 import chnp.manager.common.service.UtilService;
-import chnp.manager.model.domain.TsUser;
-import chnp.manager.service.TsUserService;
+import chnp.manager.mvc.model.domain.TsUser;
+import chnp.manager.mvc.service.TsUserService;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;

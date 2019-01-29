@@ -1,7 +1,7 @@
-package chnp.manager.service;
+package chnp.manager.mvc.service;
 
-import chnp.manager.model.domain.TsModule;
-import chnp.manager.model.query.TsModuleQuery;
+import chnp.manager.mvc.model.domain.TsModule;
+import chnp.manager.mvc.model.query.TsModuleQuery;
 
 import java.util.List;
 

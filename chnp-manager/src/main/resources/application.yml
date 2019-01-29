@@ -16,5 +16,5 @@ spring:
   aop:
     proxy-target-class: false
 mybatis:
-  type-aliases-package: chnp.manager.model.domain
+  type-aliases-package: chnp.manager.mvc.model.domain
   mapper-locations: classpath:mappers/*.xml

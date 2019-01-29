@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class LogAspect {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @Around(value = "execution(public String chnp.manager.controller.*.*(..))")
+    @Around(value = "execution(public String chnp.manager.mvc.controller.*.*(..))")
     public Object logController(ProceedingJoinPoint pjp) {
         try {
             return pjp.proceed();

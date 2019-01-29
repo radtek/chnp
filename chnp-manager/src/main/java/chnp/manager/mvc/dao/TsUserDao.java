@@ -1,7 +1,7 @@
-package chnp.manager.dao;
+package chnp.manager.mvc.dao;
 
-import chnp.manager.model.domain.TsUser;
-import chnp.manager.model.query.TsUserQuery;
+import chnp.manager.mvc.model.domain.TsUser;
+import chnp.manager.mvc.model.query.TsUserQuery;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
