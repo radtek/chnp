@@ -1,0 +1,115 @@
+
+html, body{
+    height: 100%;
+    width: 100%;
+    margin: 0;
+}
+
+/* ---------- 布局样式 START ---------- */
+.view-frame{
+    height: 100%;
+    display: flex;
+    align-items: stretch;
+}
+.view-frame> .view-frame-left{
+    flex: 0 0 auto;
+    background-color: #293038;
+}
+.view-frame> .view-frame-left> .view-frame-left-user{}
+.view-frame> .view-frame-left> .view-frame-left-menu{
+    font-size: 12px;
+}
+.view-frame> .view-frame-right{
+    flex: 1 1 auto;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: stretch;
+}
+.view-frame> .view-frame-right> .view-frame-right-tabs{
+    flex: 0 0 auto;
+    height: 40px;
+    background-color: #fafafa;
+    border-bottom: 2px solid #2f4050;
+    font-size: 12px;
+    display: flex;
+    align-items: stretch;
+}
+.view-frame> .view-frame-right> .view-frame-right-tabs> *{
+    color: #999;
+    border-right: 1px solid #eee;
+    cursor: pointer;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+}
+.view-frame> .view-frame-right> .view-frame-right-tabs> *:hover{
+    background-color: #f2f2f2;
+}
+.view-frame> .view-frame-right> .view-frame-right-tabs> *.active{
+    background-color: #293846;
+    color: #a7b1c2;
+}
+.view-frame> .view-frame-right> .view-frame-right-tabs> *.active:hover{
+    color: white;
+}
+.view-frame> .view-frame-right> .view-frame-right-page{
+    flex: 1 1 auto;
+    position: relative;
+    display: flex;
+    align-items: stretch;
+}
+.view-frame> .view-frame-right> .view-frame-right-page> *{
+    flex: 1 1 auto;
+}
+/* ---------- 布局样式 END ---------- */
+
+
+/* ---------- 菜单样式 START ----------- */
+.menu-item-wrapper{
+    min-width: 200px;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: stretch;
+}
+.menu-item-wrapper> .menu-item-title-wrapper{
+    flex: 0 0 auto;
+    line-height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+.menu-item-wrapper> .menu-item-title-wrapper> .menu-item-title-icon{
+    flex: 0 0 auto;
+    width: 30px;
+    text-align: center;
+    transition: transform 0.1s;
+}
+
+.menu-item-wrapper> .menu-item-level1{
+    background-color: #43515e;
+    border-bottom: 1px solid #414d5c;
+    color: white;
+    padding-left: 10px;
+}
+.menu-item-wrapper> .menu-item-level1.active,
+.menu-item-wrapper> .menu-item-level1:hover{
+    background-color: #37424f;
+}
+.menu-item-wrapper> .menu-item-level2{
+    color: white;
+    padding-left: 20px;
+}
+.menu-item-wrapper> .menu-item-level2.active,
+.menu-item-wrapper> .menu-item-level2:hover{
+    background-color: #0099cc;
+}
+.menu-item-wrapper> .menu-item-title-wrapper ~ .menu-item-children-wrapper{
+    display: none;
+}
+.menu-item-wrapper> .menu-item-title-wrapper.active ~ .menu-item-children-wrapper{
+    display: block;
+}
+.menu-item-wrapper> .menu-item-title-wrapper.active .fa-caret-right{
+    transform: rotate(90deg);
+}
+/* ---------- 菜单样式 END ----------- */

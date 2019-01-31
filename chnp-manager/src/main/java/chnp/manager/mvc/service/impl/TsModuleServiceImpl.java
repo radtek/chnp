@@ -56,4 +56,11 @@ public class TsModuleServiceImpl implements TsModuleService {
 		}
 		return children;
 	}
+
+	@Override
+	public int deleteById(Integer id) {
+		TsModuleQuery query = new TsModuleQuery();
+		query.setId(id);
+		return tsModuleDao.deleteByCondition(query);
+	}
 }

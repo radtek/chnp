@@ -13,4 +13,6 @@ public interface TsModuleDao {
 
 	List<TsModule> findByCondition(TsModuleQuery query);
 
+	int deleteByCondition(TsModuleQuery query);
+
 }

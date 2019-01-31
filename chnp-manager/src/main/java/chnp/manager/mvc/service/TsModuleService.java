@@ -13,4 +13,6 @@ public interface TsModuleService {
 
 	List<TsModule> findMenu(TsModuleQuery query);
 
+	int deleteById(Integer id);
+
 }

@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/generator")
 public class GeneratorController {
 
-	@RequestMapping("/index")
+	@RequestMapping
 	public String index(Model model) {
 
-		return "index";
+		return "generator/index";
 	}
 
 }

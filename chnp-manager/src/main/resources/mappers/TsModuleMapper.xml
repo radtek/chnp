@@ -58,5 +58,10 @@
 		from ts_module
 		<include refid="where"/>
 	</select>
+	
+	<delete id="deleteByCondition">
+		delete tm from ts_module tm
+		<include refid="where"/>
+	</delete>
 
 </mapper>
