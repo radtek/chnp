@@ -32,4 +32,28 @@
 		from ts_user
 		<include refid="where"/>
 	</select>
+
+	<select id="findByCondition" resultMap="BaseResultMap">
+		select <include refid="columns"/>
+		from ts_user
+		<include refid="where"/>
+	</select>
+
+	<select id="findPage" resultMap="BaseResultMap">
+		select <include refid="columns"/>
+		from ts_user
+		<include refid="where"/>
+		limit #{start}, #{length}
+	</select>
+
+	<select id="countByCondition" resultType="java.lang.Integer">
+		select count(*)
+		from ts_user
+		<include refid="where"/>
+	</select>
+
+	<delete id="deleteByCondition">
+		delete tm from ts_user tu
+		<include refid="where"/>
+	</delete>
 </mapper>

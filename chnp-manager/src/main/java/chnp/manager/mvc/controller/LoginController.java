@@ -63,6 +63,12 @@ public class LoginController {
 		return responseJson.toJSONString();
 	}
 
+	@RequestMapping("/logout")
+	public void logout() {
+		SecurityUtils.getSubject().logout();
+	}
+
+
 	@RequestMapping("/verification")
 	public void getCode(VerificationCode verificationCode, HttpServletResponse resp) {
 		verificationCode.generate();

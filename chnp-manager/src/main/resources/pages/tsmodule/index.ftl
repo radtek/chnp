@@ -1,55 +1,8 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <#include "../common/styles.ftl" />
         <link rel="stylesheet" href="/assets/plugins/zTree/css/zTreeStyle.css">
-        <style>
-            .page{
-                padding: 0 20px;
-            }
-            .page-head{
-                height: 50px;
-                font-size: 12px;
-                border-bottom: 1px solid #eeeeee;
-                display: flex;
-                align-items: stretch;
-            }
-            .page-head> .page-head-left{
-                flex: 0 0 auto;
-                display: flex;
-                align-items: center;
-            }
-            .page-head> .page-head-left> .page-head-left-title{
-                border-left: 2px solid #88b7e0;
-                padding-left: 10px;
-            }
-            .page-head> .page-head-right{
-                flex: 1 1 auto;
-                justify-content: flex-end;
-            }
-
-            .ztree .tree-btn-new> *,
-            .ztree .tree-btn-edit> *,
-            .ztree .tree-btn-del> *{
-                font-family: FontAwesome, sans-serif;
-            }
-            .ztree .tree-btn-new,
-            .ztree .tree-btn-edit,
-            .ztree .tree-btn-del{
-                margin-left: 2px;
-                padding: 0 3px;
-                border: none;
-                color: white;
-                cursor: pointer;
-            }
-            .ztree .tree-btn-new,
-            .ztree .tree-btn-edit{
-                color: black;
-            }
-            .ztree .tree-btn-del{
-                background-color: #d73925;
-            }
-        </style>
+        <#include "../common/styles.ftl" />
     </head>
     <body>
         <div class="page">
@@ -146,20 +99,6 @@
                             '<i class="fa fa-trash"></i>编辑</button>'
                     );
                 }
-            }
-            
-            function modal(obj) {
-                $.ajax({
-                    type: "GET",
-                    url: obj.data("url"),
-                    dataType: "html",
-                    success: function (html) {
-                        $(html).modal();
-                    },
-                    error: function () {
-                        alert("请求失败");
-                    }
-                })
             }
         </script>
     </body>

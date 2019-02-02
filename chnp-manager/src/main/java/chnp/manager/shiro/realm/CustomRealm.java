@@ -11,6 +11,9 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class CustomRealm extends AuthorizingRealm {
 
 	@Autowired
@@ -66,8 +69,14 @@ public class CustomRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
 		SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
+
+		Set<String> permissions = new HashSet<>();
+		permissions.add("tsmodule");
+		permissions.add("tsmodule_query");
+		System.out.println("*********************");
+
 		//authorizationInfo.setRoles();
-		//authorizationInfo.setStringPermissions();
+		authorizationInfo.setStringPermissions(permissions);
         return authorizationInfo;
     }
 }

@@ -1,9 +1,10 @@
 package chnp.manager.mvc.controller;
 
+import chnp.manager.common.entity.DataTables;
 import chnp.manager.common.entity.ResponseJson;
-import chnp.manager.mvc.model.domain.TsModule;
-import chnp.manager.mvc.model.query.TsModuleQuery;
-import chnp.manager.mvc.service.TsModuleService;
+import chnp.manager.mvc.model.domain.TsUser;
+import chnp.manager.mvc.model.query.TsUserQuery;
+import chnp.manager.mvc.service.TsUserService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -18,34 +20,41 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/tsmodule")
-public class TsModuleController {
+@RequestMapping("/tsuser")
+public class TsUserController {
 	private final Logger log = LoggerFactory.getLogger(getClass());
 
 	@Autowired
-	private TsModuleService tsModuleService;
+	private TsUserService tsUserService;
 
 	/**<p>首页</p>
 	 *
 	 * @return 首页
 	 */
-	@RequiresPermissions(value = {"tsmodule"})
+	@RequiresPermissions(value = {"tsuser"})
 	@RequestMapping
 	public String index() {
-		return "tsmodule/index";
+		return "tsuser/index";
+	}
+
+	@RequiresPermissions(value = "tsuser_query")
+	@ResponseBody
+	@RequestMapping(value = "/page", method = RequestMethod.POST)
+	public DataTables page(TsUserQuery tsUserQuery) {
+		return tsUserService.findPage(tsUserQuery);
 	}
 
 	/**<p>新增界面</p>
 	 *
 	 * @param model
-	 * @param tsModule 初始化数据
+	 * @param tsUser 初始化数据
 	 * @return 新增界面
 	 */
-	@RequiresPermissions(value = {"tsmodule_save"})
+	@RequiresPermissions(value = {"tsuser_save"})
 	@RequestMapping("/new")
-	public String _new(Model model, TsModule tsModule) {
-		model.addAttribute("tsModule", tsModule);
-		return "tsmodule/new";
+	public String _new(Model model, TsUser tsUser) {
+		model.addAttribute("tsUser", tsUser);
+		return "tsuser/new";
 	}
 
 	/**<p>编辑界面</p>
@@ -54,13 +63,13 @@ public class TsModuleController {
 	 * @param id 数据主键
 	 * @return 编辑界面
 	 */
-	@RequiresPermissions(value = {"tsmodule_update"})
+	@RequiresPermissions(value = {"tsuser_update"})
 	@RequestMapping("/edit")
 	public String _edit(Model model, @RequestParam(name = "id")Integer id) {
-		TsModule tsModule = tsModuleService.getById(id);
-		if (null == tsModule) tsModule = new TsModule();
-		model.addAttribute("tsModule", tsModule);
-		return "tsmodule/edit";
+		TsUser tsUser = tsUserService.getById(id);
+		if (null == tsUser) tsUser = new TsUser();
+		model.addAttribute("tsUser", tsUser);
+		return "tsuser/edit";
 	}
 
 	/**<p>删除</p>
@@ -68,7 +77,7 @@ public class TsModuleController {
 	 * @param ids 数据主键列表字符串
 	 * @return 操作结果
 	 */
-	@RequiresPermissions(value = {"tsmodule_delete"})
+	@RequiresPermissions(value = {"tsuser_delete"})
 	@ResponseBody
 	@RequestMapping("/del")
 	public String del(@RequestParam(name = "ids") String ids) {
@@ -78,17 +87,17 @@ public class TsModuleController {
 		String[] idList = ids.split(",");
 		for (String sId : idList) {
 			try {
-				tsModuleService.deleteById(Integer.valueOf(sId));
+				tsUserService.deleteById(Integer.valueOf(sId));
 			}catch (Exception e) {
-				log.error("ID为" + sId + "的菜单删除失败", e);
+				log.error("ID为" + sId + "的用户删除失败", e);
 				fails.add(sId);
 			}
 		}
 
 		StringBuilder info = new StringBuilder();
 		for (String sId : fails) {
-			TsModule tsModule = tsModuleService.getById(Integer.valueOf(sId));
-			if (null != tsModule) info.append(",").append(tsModule.getName());
+			TsUser tsUser = tsUserService.getById(Integer.valueOf(sId));
+			if (null != tsUser) info.append(",").append(tsUser.getUserName());
 		}
 
 		if (info.length() > 0) {
@@ -96,19 +105,6 @@ public class TsModuleController {
 		}else responseJson.success("删除成功！");
 
 		return responseJson.toJSONString();
-	}
-
-	/**<p>菜单数据获取接口</p>
-	 *
-	 * @param tsModuleQuery 查询条件
-	 * @return 菜单数据列表
-	 */
-	@RequiresPermissions(value = {"tsmodule_query"})
-	@ResponseBody
-	@RequestMapping("/data")
-	public List<TsModule> data(TsModuleQuery tsModuleQuery) {
-		tsModuleQuery.setOrderCondition("parent_id, sort");
-		return tsModuleService.findAllByCondition(tsModuleQuery);
 	}
 
 }

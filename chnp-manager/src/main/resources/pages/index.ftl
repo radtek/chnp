@@ -9,11 +9,22 @@
     <body>
         <div class="view-frame">
             <div class="view-frame-left">
-                <div class="view-frame-left-user"></div>
+                <div class="view-frame-left-user">
+                    <img src="/assets/img/default_user.jpg">
+                    <div>
+                        <div>Super Admin</div>
+                        <div><a href="/logout">[注销]</a></div>
+                    </div>
+                </div>
                 <div class="view-frame-left-menu"></div>
             </div>
             <div class="view-frame-right">
-                <div class="view-frame-right-tabs"></div>
+                <div class="view-frame-right-tool">
+                    <div><i class="fa fa-backward"></i></div>
+                    <div class="view-frame-right-tabs"></div>
+                    <div><i class="fa fa-forward"></i></div>
+                    <div></div>
+                </div>
                 <div class="view-frame-right-page"></div>
             </div>
         </div>

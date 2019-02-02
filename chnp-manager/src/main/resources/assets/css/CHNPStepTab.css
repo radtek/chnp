@@ -1,0 +1,61 @@
+.m-steptab{
+    font-size: 12px;
+}
+.m-steptab> div.steps{
+    display: flex;
+    align-items: center;
+}
+.m-steptab> div.steps> *{
+    flex: 0 0 auto;
+    display: flex;
+}
+.m-steptab> div.steps> *> span{
+    flex: 0 0 auto;
+    line-height: 30px;
+    padding: 0 10px;
+    font-size: 12px;
+    background-color: #e0e0e0;
+}
+.m-steptab> div.steps> *.active> span{
+    background-color: #78a3ff;
+    color: white;
+}
+.m-steptab> div.steps> *.active> span + *{
+    border-left-color: #78a3ff !important;
+}
+.m-steptab> div.content{
+    min-height: 100px;
+    border: 1px solid RGBA(0,0,0,0.1);
+    margin: 5px 0;
+    padding: 20px;
+}
+.m-steptab> div.content> div{
+    display: none;
+}
+.m-steptab> div.content> div.active{
+    display: block;
+}
+.m-steptab> div.operates> *{
+    outline: none;
+    border-width: 0;
+    cursor: pointer;
+    height: 28px;
+    color: white;
+    padding: 0 10px;
+}
+.m-steptab> div.operates> *:hover:enabled{
+    opacity: 0.7;
+}
+.m-steptab> div.operates> .btnPrevStep{
+    background-color: #1778b9;
+}
+.m-steptab> div.operates> .btnNextStep{
+    background-color: #1778b9;
+}
+.m-steptab> div.operates> .btnFinish{
+    background-color: #e86060;
+}
+.m-steptab> div.operates> *[disabled]{
+    background-color: #e0e0e0;
+    cursor: default;
+}

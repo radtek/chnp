@@ -8,16 +8,51 @@ html, body{
 /* ---------- 布局样式 START ---------- */
 .view-frame{
     height: 100%;
+    overflow: hidden;
     display: flex;
     align-items: stretch;
 }
 .view-frame> .view-frame-left{
     flex: 0 0 auto;
+    min-width: 200px;
     background-color: #293038;
+    display: flex;
+    flex-flow: column nowrap;
 }
-.view-frame> .view-frame-left> .view-frame-left-user{}
+.view-frame> .view-frame-left> .view-frame-left-user{
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    color: white;
+    background-color: #1c3e48;
+}
+.view-frame> .view-frame-left> .view-frame-left-user> img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+    margin: 20px;
+}
 .view-frame> .view-frame-left> .view-frame-left-menu{
+    flex: 1 1 auto;
+    overflow-y: auto;
     font-size: 12px;
+}
+/*滚动条整体样式*/
+.view-frame> .view-frame-left> .view-frame-left-menu::-webkit-scrollbar {
+    width: 10px;
+    height: 1px;
+}
+/*滚动条滑块*/
+.view-frame> .view-frame-left> .view-frame-left-menu::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background: #535353;
+}
+/*滚动条轨道*/
+.view-frame> .view-frame-left> .view-frame-left-menu::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 1px rgba(0,0,0,0);
+    border-radius: 10px;
+    background: #ccc;
 }
 .view-frame> .view-frame-right{
     flex: 1 1 auto;
@@ -25,7 +60,7 @@ html, body{
     flex-flow: column nowrap;
     align-items: stretch;
 }
-.view-frame> .view-frame-right> .view-frame-right-tabs{
+.view-frame> .view-frame-right> .view-frame-right-tool{
     flex: 0 0 auto;
     height: 40px;
     background-color: #fafafa;
@@ -34,7 +69,23 @@ html, body{
     display: flex;
     align-items: stretch;
 }
-.view-frame> .view-frame-right> .view-frame-right-tabs> *{
+.view-frame> .view-frame-right> .view-frame-right-tool> *{
+    flex: 0 0 auto;
+    color: #999;
+    border-right: 1px solid #eee;
+}
+.view-frame> .view-frame-right> .view-frame-right-tool> *:not(.view-frame-right-tabs){
+    cursor: pointer;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+}
+.view-frame> .view-frame-right> .view-frame-right-tool> .view-frame-right-tabs{
+    flex: 1 1 auto;
+    display: flex;
+    align-items: stretch;
+}
+.view-frame> .view-frame-right> .view-frame-right-tool> .view-frame-right-tabs> *{
     color: #999;
     border-right: 1px solid #eee;
     cursor: pointer;
@@ -42,14 +93,15 @@ html, body{
     display: flex;
     align-items: center;
 }
-.view-frame> .view-frame-right> .view-frame-right-tabs> *:hover{
+.view-frame> .view-frame-right> .view-frame-right-tool> *:not(.view-frame-right-tabs):hover,
+.view-frame> .view-frame-right> .view-frame-right-tool> .view-frame-right-tabs> *:hover{
     background-color: #f2f2f2;
 }
-.view-frame> .view-frame-right> .view-frame-right-tabs> *.active{
+.view-frame> .view-frame-right> .view-frame-right-tool> .view-frame-right-tabs> *.active{
     background-color: #293846;
     color: #a7b1c2;
 }
-.view-frame> .view-frame-right> .view-frame-right-tabs> *.active:hover{
+.view-frame> .view-frame-right> .view-frame-right-tool> .view-frame-right-tabs> *.active:hover{
     color: white;
 }
 .view-frame> .view-frame-right> .view-frame-right-page{
@@ -66,7 +118,6 @@ html, body{
 
 /* ---------- 菜单样式 START ----------- */
 .menu-item-wrapper{
-    min-width: 200px;
     display: flex;
     flex-flow: column nowrap;
     align-items: stretch;

@@ -1,8 +1,9 @@
 package chnp.manager.mvc.model.query;
 
 import chnp.manager.common.entity.CommonQuery;
+import chnp.manager.common.entity.PaginationQuery;
 
-public class TsModuleQuery extends CommonQuery {
+public class TsModuleQuery extends PaginationQuery {
 
 	private Integer id;
 	private String name;
