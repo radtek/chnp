@@ -291,6 +291,7 @@ public abstract class RedisJTemplate {
 			Map<String, List<String>> result = new HashMap<>();
 
 			ScanParams params = new ScanParams();
+			params.match(pattern);
 			params.count(limit);
 
 			String cursor = "-1";
