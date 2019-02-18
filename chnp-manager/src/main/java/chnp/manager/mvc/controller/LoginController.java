@@ -1,6 +1,6 @@
 package chnp.manager.mvc.controller;
 
-import chnp.common.utils.StringUtil;
+import chnp.common.utils.StringUtils;
 import chnp.manager.common.entity.ResponseJson;
 import chnp.manager.common.VerificationCode;
 import chnp.manager.common.service.UtilService;
@@ -42,9 +42,9 @@ public class LoginController {
 						   @RequestParam(name = "userpswd") String up,
 						   @RequestParam(name = "vericode") String vc) throws Exception {
 		ResponseJson responseJson = new ResponseJson();
-		if (StringUtil.isEmpty(un)) responseJson.error("请输入登陆账号");
-		else if (StringUtil.isEmpty(up)) responseJson.error("请输入登陆密码");
-		else if (StringUtil.isEmpty(vc)) responseJson.error("请输入验证码");
+		if (StringUtils.isEmpty(un)) responseJson.error("请输入登陆账号");
+		else if (StringUtils.isEmpty(up)) responseJson.error("请输入登陆密码");
+		else if (StringUtils.isEmpty(vc)) responseJson.error("请输入验证码");
 		else {
 			Session session = utilService.getSession();
 			Object vericode = session.getAttribute("verificationCode");

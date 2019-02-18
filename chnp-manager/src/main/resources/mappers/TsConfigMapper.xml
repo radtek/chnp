@@ -32,6 +32,30 @@
 			<if test="filterCondition != null and filterCondition != ''"><![CDATA[ ${filterCondition} and]]></if>
 		</trim>
 	</sql>
+
+	<!-- 操作：插入数据 -->
+	<insert id="save" useGeneratedKeys="true">
+		insert into ts_config
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">id ,</if>
+			<if test="configName != null and configName != ''">config_name ,</if>
+			<if test="configKey != null and configKey != ''">config_key ,</if>
+			<if test="configVal != null and configVal != ''">config_val ,</if>
+			<if test="configDesc != null and configDesc != ''">config_desc ,</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="id != null">#{ id } ,</if>
+			<if test="configName != null and configName != ''">#{ configName } ,</if>
+			<if test="configKey != null and configKey != ''">#{ configKey } ,</if>
+			<if test="configVal != null and configVal != ''">#{ configVal } ,</if>
+			<if test="configDesc != null and configDesc != ''">#{ configDesc } ,</if>
+		</trim>
+	</insert>
+
+	<delete id="deleteByCondition">
+		delete tc from ts_config tc
+		<include refid="where"/>
+	</delete>
 	
 	<select id="getByCondition" resultMap="BaseResultMap">
 		select <include refid="columns"/>
@@ -52,14 +76,23 @@
 		limit #{start}, #{length}
 	</select>
 
-	<select id="countByCondition" resultType="java.lang.Integer">
+	<select id="countByCondition" resultType="java.lang.Long">
 		select count(*)
 		from ts_config
 		<include refid="where"/>
 	</select>
 
-	<delete id="deleteByCondition">
-		delete tc from ts_config tc
-		<include refid="where"/>
-	</delete>
+	<!-- 操作：根据主键更新数据 -->
+	<update id="updateById">
+		update ts_config
+		<trim prefix="set" suffixOverrides=",">
+			<if test="configName != null">config_name = #{ configName } ,</if>
+			<if test="configKey != null">config_key = #{ configKey } ,</if>
+			<if test="configVal != null">config_val = #{ configVal } ,</if>
+			<if test="configDesc != null">config_desc = #{ configDesc } ,</if>
+		</trim>
+		<trim prefix="where">
+			id = #{ id }
+		</trim>
+	</update>
 </mapper>

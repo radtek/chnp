@@ -1,6 +1,6 @@
 package chnp.manager.shiro.realm;
 
-import chnp.common.utils.StringUtil;
+import chnp.common.utils.StringUtils;
 import chnp.manager.common.service.UtilService;
 import chnp.manager.mvc.model.domain.TsUser;
 import chnp.manager.mvc.service.TsUserService;
@@ -35,13 +35,13 @@ public class CustomRealm extends AuthorizingRealm {
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
 
 		TsUser tsUser = tsUserService.getByUserName(token.getUsername());
-		if (null == tsUser || StringUtil.isEmpty(tsUser.getUserPswd())) throw new UnknownAccountException("账号或密码错误");
+		if (null == tsUser || StringUtils.isEmpty(tsUser.getUserPswd())) throw new UnknownAccountException("账号或密码错误");
 
 		Object vericode = utilService.getSession().getAttribute("verificationCode");
 
 		String pswd;
 		try {
-			pswd = StringUtil.MD5Encode(tsUser.getUserPswd() + ((String) vericode).toLowerCase());
+			pswd = StringUtils.MD5Encode(tsUser.getUserPswd() + ((String) vericode).toLowerCase());
 		}catch (Exception e) {
 			throw new AuthenticationException("内部错误");
 		}

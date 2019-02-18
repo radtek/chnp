@@ -5,7 +5,7 @@ import java.util.List;
 public class DataTables {
 
 	private Integer draw;
-	private Integer recordsTotal;
+	private Long recordsTotal;
 	private Integer recordsFiltered;
 	private List data;
 
@@ -17,11 +17,11 @@ public class DataTables {
 		this.draw = draw;
 	}
 
-	public Integer getRecordsTotal() {
+	public Long getRecordsTotal() {
 		return recordsTotal;
 	}
 
-	public void setRecordsTotal(Integer recordsTotal) {
+	public void setRecordsTotal(Long recordsTotal) {
 		this.recordsTotal = recordsTotal;
 	}
 

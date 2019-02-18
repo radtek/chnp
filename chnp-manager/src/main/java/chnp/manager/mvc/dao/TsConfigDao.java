@@ -9,14 +9,18 @@ import java.util.List;
 @Mapper
 public interface TsConfigDao {
 
+	Integer save(TsConfig tsConfig);
+
 	TsConfig getByCondition(TsConfigQuery query);
 
 	List<TsConfig> findByCondition(TsConfigQuery query);
 
 	List<TsConfig> findPage(TsConfigQuery query);
 
-	Integer countByCondition(TsConfigQuery query);
+	Long countByCondition(TsConfigQuery query);
 
 	Integer deleteByCondition(TsConfigQuery query);
+
+	Integer updateById(TsConfig tsConfig);
 
 }

@@ -24,6 +24,11 @@ public class TsConfigServiceImpl implements TsConfigService {
 	private TsConfigDao tsConfigDao;
 
 	@Override
+	public Integer save(TsConfig tsConfig) {
+		return tsConfigDao.save(tsConfig);
+	}
+
+	@Override
 	public TsConfig getById(Integer id) {
 		TsConfigQuery query = new TsConfigQuery();
 		query.setId(id);
@@ -56,5 +61,10 @@ public class TsConfigServiceImpl implements TsConfigService {
 		dataTables.setRecordsTotal(tsConfigDao.countByCondition(query));
 
 		return dataTables;
+	}
+
+	@Override
+	public Integer update(TsConfig tsConfig) {
+		return tsConfigDao.updateById(tsConfig);
 	}
 }

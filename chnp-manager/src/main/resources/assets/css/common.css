@@ -41,15 +41,7 @@
     margin-left: 2px;
     padding: 0 3px;
     border: none;
-    color: white;
     cursor: pointer;
-}
-.ztree .tree-btn-new,
-.ztree .tree-btn-edit{
-    color: black;
-}
-.ztree .tree-btn-del{
-    background-color: #d73925;
 }
 /* ---------- zTree样式覆盖 END ---------- */
 

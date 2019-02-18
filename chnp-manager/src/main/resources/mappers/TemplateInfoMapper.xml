@@ -1,0 +1,114 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace必须与接口的全类名一致-->
+<mapper namespace="chnp.manager.mvc.dao.TemplateInfoDao">
+
+    <!-- 结果映射 -->
+    <resultMap id="templateMapper" type="chnp.manager.mvc.model.domain.TemplateInfo">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="file_path" property="filePath" jdbcType="VARCHAR" />
+        <result column="template" property="template" jdbcType="VARCHAR" />
+        <result column="engine" property="engine" jdbcType="INTEGER" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="user_id" property="userId" jdbcType="INTEGER" />
+    </resultMap>
+
+    <!-- 查询字段 -->
+    <sql id="columns">
+        <trim suffixOverrides=",">
+            id ,name ,file_path ,template ,engine ,update_time ,user_id ,
+        </trim>
+        <if test="additionalColumns != null and additionalColumns != ''"><![CDATA[ , ${ additionalColumns } ]]></if>
+    </sql>
+
+    <!-- 关联表 -->
+    <sql id="from">
+        <trim suffixOverrides=",">
+            from template_info ,
+        </trim>
+        <if test="additionalTables != null and additionalTables != ''"><![CDATA[ ${ additionalTables } ]]></if>
+    </sql>
+
+    <!-- 过滤条件 -->
+    <sql id="where">
+        <trim prefix="where" suffixOverrides="and">
+        	<![CDATA[ 1 = 1 and ]]>
+            <if test="id != null"><![CDATA[ template_info.id = #{ id } and ]]></if>
+            <if test="name != null"><![CDATA[ template_info.name = #{ name } and ]]></if>
+            <if test="filePath != null"><![CDATA[ template_info.file_path = #{ filePath } and ]]></if>
+            <if test="template != null"><![CDATA[ template_info.template = #{ template } and ]]></if>
+            <if test="engine != null"><![CDATA[ template_info.engine = #{ engine } and ]]></if>
+            <if test="updateTimeBegin != null"><![CDATA[ template_info.update_time >= #{ updateTimeBegin } and ]]></if>
+            <if test="updateTimeEnd != null"><![CDATA[ template_info.update_time < #{ updateTimeEnd } and ]]></if>
+            <if test="userId != null"><![CDATA[ template_info.user_id = #{ userId } and ]]></if>
+            <if test="search != null and search != ''">
+                <![CDATA[
+			        (
+						LOWER(template_info.name) like LOWER(concat('%',#{search, jdbcType=VARCHAR},'%'))
+					) and
+			    ]]>
+            </if>
+            <if test="filterCondition != null and filterCondition != ''"><![CDATA[ ${ filterCondition } and]]></if>
+        </trim>
+        <if test="start != null and length != null "><![CDATA[ limit #{ start },#{ length } ]]></if>
+    </sql>
+
+    <!-- 操作：插入数据 -->
+    <insert id="save" useGeneratedKeys="true">
+        INSERT INTO template_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id ,</if>
+            <if test="name != null and name != ''">name ,</if>
+            <if test="filePath != null and filePath != ''">file_path ,</if>
+            <if test="template != null and template != ''">template ,</if>
+            <if test="engine != null">engine ,</if>
+            <if test="updateTime != null">update_time ,</if>
+            <if test="userId != null">user_id ,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{ id } ,</if>
+            <if test="name != null and name != ''">#{ name } ,</if>
+            <if test="filePath != null and filePath != ''">#{ filePath } ,</if>
+            <if test="template != null and template != ''">#{ template } ,</if>
+            <if test="engine != null">#{ engine } ,</if>
+            <if test="updateTime != null">#{ updateTime } ,</if>
+            <if test="userId != null">#{ userId } ,</if>
+        </trim>
+    </insert>
+
+    <!-- 操作：根据条件删除 -->
+    <delete id="deleteByCondition">
+        delete template_info <include refid="from" />
+        <include refid="where" />
+    </delete>
+
+    <!-- 操作：根据条件查询数据 -->
+    <select id="findByCondition" resultMap="templateMapper" useCache="false">
+        select <include refid="columns" />
+        <include refid="from" />
+        <include refid="where" />
+    </select>
+
+    <!-- 操作：根据条件统计数据 -->
+    <select id="countByCondition" resultType="long" useCache="false">
+        select count(*) <include refid="from" />
+        <include refid="where" />
+    </select>
+
+    <!-- 操作：根据主键更新数据 -->
+    <update id="updateById">
+        update template_info
+        <trim prefix="set" suffixOverrides=",">
+            <if test="name != null">name = #{ name } ,</if>
+            <if test="filePath != null">file_path = #{ filePath } ,</if>
+            <if test="template != null">template = #{ template } ,</if>
+            <if test="engine != null">engine = #{ engine } ,</if>
+            <if test="updateTime != null">update_time = #{ updateTime } ,</if>
+            <if test="userId != null">user_id = #{ userId } ,</if>
+        </trim>
+        <trim prefix="where">
+            id = #{ id }
+        </trim>
+    </update>
+</mapper>

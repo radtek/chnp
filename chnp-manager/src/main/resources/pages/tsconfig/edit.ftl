@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="modalLabel">查看</h4>
+                <h4 class="modal-title" id="modalLabel">编辑</h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal" action="/tsconfig/update">
@@ -35,7 +35,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button id="tsconfig_edit_btn_save" type="button" class="btn btn-primary">保存</button>
+                <button id="tsconfig_edit_btn_update" type="button" class="btn btn-primary">保存</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
             </div>
         </div>
@@ -47,7 +47,7 @@
 
             $('#tsconfig_edit_modal').on('shown.bs.modal', function() {
 
-                $("#tsconfig_edit_btn_save").on("click", function(e) {
+                $("#tsconfig_edit_btn_update").on("click", function(e) {
                     e.preventDefault();
 
                     var form = $("#tsconfig_edit_modal form");
@@ -59,8 +59,8 @@
                         success: function(json) {
                             if (1 === json.returnCode) {
                                 $("#tsconfig_edit_modal").modal("hide");
-                                if (typeof tsConfig.dataTablesUtil !== "undefined") {
-                                    tsconfig.dataTablesUtil.
+                                if (typeof tsconfig !== "undefined") {
+                                    tsconfig.searching();
                                 }
                             }else alert(json.msg);
                         },

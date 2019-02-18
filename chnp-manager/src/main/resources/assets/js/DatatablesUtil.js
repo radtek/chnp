@@ -1,5 +1,6 @@
 var DatatablesUtil = function() {
     var datatables;
+    var additionalParams = [];
 
     var defaultOptions = {
         container: "table.dataTable",
@@ -25,7 +26,7 @@ var DatatablesUtil = function() {
                     nd.push({name:"start", value:d.start});
                     nd.push({name:"length", value:d.length});
                     //nd.push({name:"order", value:d.order});
-                    $.extend(nd, params);
+                    $.extend(nd, additionalParams);
                     return nd;
                 }
             },
@@ -58,85 +59,97 @@ var DatatablesUtil = function() {
 
     return {
         init: function(options) {
-            var settings = $.extend(true, defaultOptions, options);
+            defaultOptions = $.extend(true, defaultOptions, options);
 
-            if (settings.chk.enable) {
-                $("table.table thead tr th:first-child input[type=checkbox]").on("click", function () {
+            if (defaultOptions.chk.enable) {
+                $(defaultOptions.container).find("thead tr th:first-child input[type=checkbox]").on("click", function () {
                     var ischecked = $(this).is(":checked");
                     if (ischecked) {
-                        $("table.table tr td:first-child input[type=checkbox]").prop({checked: true});
+                        $(defaultOptions.container).find("tr td:first-child input[type=checkbox]").prop({checked: true});
                     } else {
-                        $("table.table tr td:first-child input[type=checkbox]").prop({checked: false});
+                        $(defaultOptions.container).find("tr td:first-child input[type=checkbox]").prop({checked: false});
                     }
                 });
 
-                $("table.table tfoot tr td:first-child input[type=checkbox]").on("click", function () {
+                $(defaultOptions.container).find("tfoot tr td:first-child input[type=checkbox]").on("click", function () {
                     var ischecked = $(this).is(":checked");
                     if (ischecked) {
-                        $("table.table thead tr th:first-child input[type=checkbox]").prop({checked: true});
-                        $("table.table tbody tr td:first-child input[type=checkbox]").prop({checked: true});
+                        $(defaultOptions.container).find("thead tr th:first-child input[type=checkbox]").prop({checked: true});
+                        $(defaultOptions.container).find("tbody tr td:first-child input[type=checkbox]").prop({checked: true});
                     } else {
-                        $("table.table thead tr th:first-child input[type=checkbox]").prop({checked: false});
-                        $("table.table tbody tr td:first-child input[type=checkbox]").prop({checked: false});
+                        $(defaultOptions.container).find("thead tr th:first-child input[type=checkbox]").prop({checked: false});
+                        $(defaultOptions.container).find("tbody tr td:first-child input[type=checkbox]").prop({checked: false});
                     }
                 });
             }
-            settings.dataTable.ajax.url = settings.serverUrl;
+            defaultOptions.dataTable.ajax.url = defaultOptions.serverUrl;
 
-            settings.dataTable.columns = (function() {
+            defaultOptions.dataTable.columns = (function() {
                 var cols = [];
-                if (settings.chk.enable) {
+                if (defaultOptions.chk.enable) {
                     cols.push({
-                        "data": settings.chk.data,
+                        "data": defaultOptions.chk.data,
                         "render": function(data, type, full, meta) {
-                            return '<input name="' + settings.chk.name + '" type="checkbox" data-id="' + data + '"/>';
+                            return '<input name="' + defaultOptions.chk.name + '" type="checkbox" data-id="' + data + '"/>';
                         }
                     });
                 }
 
-                $.each(settings.columnNames, function(i, e) {
+                $.each(defaultOptions.columnNames, function(i, e) {
                     cols.push({
                         "data": e
                     });
                 });
 
-                if (null !== settings.operate) {
-                    cols.push(settings.operate);
+                if (null !== defaultOptions.operate) {
+                    cols.push(defaultOptions.operate);
                 }
                 return cols;
             })();
 
             // 实例化DataTables
-            datatables = $(settings.container).DataTable(settings.dataTable);
+            datatables = $(defaultOptions.container).DataTable(defaultOptions.dataTable);
 
             // 绑定DataTables的重画事件
             datatables.on("draw", function() {
-                if (settings.chk.enable) {
+                if (defaultOptions.chk.enable) {
                     // 行选中状态变更操作：
                     //   若行状态操作为取消，则取消全选按钮的选中状态
                     //   若行状态操作为选中，且所有行状态均为选中，则选中全选按钮
-                    $("table.table tbody tr td:first-child input[type=checkbox]").on("click", function () {
+                    $(defaultOptions.container).find("tbody tr td:first-child input[type=checkbox]").on("click", function () {
                         if ($(this).is(":checked")) {
                             var checkedAll = true;
-                            $.each($("table.table tbody tr td:first-child input[type=checkbox]"), function (i, e) {
+                            $.each($(defaultOptions.container).find("tbody tr td:first-child input[type=checkbox]"), function (i, e) {
                                 checkedAll &= $(e).is(":checked");
                                 if (!checkedAll) return false;
                             });
                             if (checkedAll) {
-                                $("table.table thead tr th:first-child input[type=checkbox]").prop("checked", true);
-                                $("table.table tfoot tr td:first-child input[type=checkbox]").prop("checked", true);
+                                $(defaultOptions.container).find("thead tr th:first-child input[type=checkbox]").prop("checked", true);
+                                $(defaultOptions.container).find("tfoot tr td:first-child input[type=checkbox]").prop("checked", true);
                             }
                         } else {
-                            $("table.table thead tr th:first-child input[type=checkbox]").prop("checked", false);
-                            $("table.table tfoot tr td:first-child input[type=checkbox]").prop("checked", false);
+                            $(defaultOptions.container).find("thead tr th:first-child input[type=checkbox]").prop("checked", false);
+                            $(defaultOptions.container).find("tfoot tr td:first-child input[type=checkbox]").prop("checked", false);
                         }
                     });
                 }
 
             });
         },
-        getDataTable: function () {
+        getDataTable: function() {
             return datatables;
+        },
+        searching: function(params) {
+            additionalParams = params;
+            datatables.ajax.reload();
+            additionalParams = [];
+        },
+        getSelectedItems: function() {
+            var items = "";
+            $.each($(defaultOptions.container).find("tbody tr td:first-child input[type=checkbox]:checked"), function(i, e) {
+                items += "," + $(this).data("id");
+            });
+            return items.length > 0 ? items.substr(1) : null;
         }
     };
 };

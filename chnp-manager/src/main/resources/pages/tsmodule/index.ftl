@@ -86,7 +86,7 @@
             function addBtnEdit(treeNode) {
                 if ($("#btnEdit_" + treeNode.id).length === 0) {
                     $("#" + treeNode.tId + "_a").append(
-                            '<button id="btnEdit_' + treeNode.id + '" class="tree-btn-edit" onfocus="this.blur();" data-url="/tsmodule/edit?id="' + treeNode.id + '" onclick="modal($(this))">' +
+                            '<button id="btnEdit_' + treeNode.id + '" class="btn-primary tree-btn-edit" onfocus="this.blur();" data-url="/tsmodule/edit?id="' + treeNode.id + '" onclick="modal($(this))">' +
                             '<i class="fa fa-edit"></i>编辑</button>'
                     );
                 }
@@ -95,7 +95,7 @@
             function addBtnDel(treeNode) {
                 if ($("#btnDel_" + treeNode.id).length === 0) {
                     $("#" + treeNode.tId + "_a").append(
-                            '<button id="btnDel_' + treeNode.id + '" class="tree-btn-del" onfocus="this.blur();" data-url="/tsmodule/del?ids="' + treeNode.id + '">' +
+                            '<button id="btnDel_' + treeNode.id + '" class="btn-danger tree-btn-del" onfocus="this.blur();" data-url="/tsmodule/del?ids="' + treeNode.id + '">' +
                             '<i class="fa fa-trash"></i>编辑</button>'
                     );
                 }

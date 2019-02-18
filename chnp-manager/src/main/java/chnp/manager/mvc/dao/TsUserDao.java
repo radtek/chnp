@@ -15,7 +15,7 @@ public interface TsUserDao {
 
 	List<TsUser> findPage(TsUserQuery query);
 
-	Integer countByCondition(TsUserQuery query);
+	Long countByCondition(TsUserQuery query);
 
 	Integer deleteByCondition(TsUserQuery query);
 

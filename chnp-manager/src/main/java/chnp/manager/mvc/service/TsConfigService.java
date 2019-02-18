@@ -8,6 +8,8 @@ import chnp.manager.mvc.model.query.TsUserQuery;
 
 public interface TsConfigService {
 
+	Integer save(TsConfig tsConfig);
+
 	TsConfig getById(Integer id);
 
 	TsConfig getByKey(String configKey);
@@ -15,5 +17,7 @@ public interface TsConfigService {
 	DataTables findPage(TsConfigQuery query);
 
 	int deleteById(Integer id);
+
+	Integer update(TsConfig tsConfig);
 
 }

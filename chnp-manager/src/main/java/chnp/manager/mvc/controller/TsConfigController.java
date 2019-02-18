@@ -72,6 +72,24 @@ public class TsConfigController {
 		return "tsconfig/new";
 	}
 
+	/**<p>保存数据</p>
+	 *
+	 * @param tsConfig 保存对象
+	 * @return 操作结果
+	 */
+	@RequiresPermissions(value = {"tsconfig_insert"})
+	@ResponseBody
+	@RequestMapping("/save")
+	public String save(TsConfig tsConfig) {
+		ResponseJson responseJson = new ResponseJson();
+
+		if (tsConfigService.save(tsConfig) > 0) {
+			responseJson.success("更新成功！");
+		}else responseJson.error("更新失败！");
+
+		return responseJson.toJSONString();
+	}
+
 	/**<p>编辑界面</p>
 	 *
 	 * @param model
@@ -87,16 +105,21 @@ public class TsConfigController {
 		return "tsconfig/edit";
 	}
 
-	/**<p>删除</p>
+	/**<p>更新数据</p>
 	 *
-	 * @param tsConfig 数据主键列表字符串
+	 * @param tsConfig 更新对象
 	 * @return 操作结果
 	 */
-	@RequiresPermissions(value = {"tsconfig_update"})
+	@RequiresPermissions(value = {"tsconfig_uopdate"})
 	@ResponseBody
 	@RequestMapping("/update")
 	public String update(TsConfig tsConfig) {
 		ResponseJson responseJson = new ResponseJson();
+
+		if (tsConfig.getId() == null) responseJson.error("未指定更新对象！");
+		else if (tsConfigService.update(tsConfig) > 0) {
+			responseJson.success("更新成功！");
+		}else responseJson.error("更新失败！");
 
 		return responseJson.toJSONString();
 	}
