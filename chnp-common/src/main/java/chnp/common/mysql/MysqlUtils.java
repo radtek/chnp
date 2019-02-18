@@ -12,7 +12,7 @@ import java.util.Map;
 
 import chnp.common.mysql.enums.JdbcType;
 import chnp.common.mysql.enums.JavaType;
-import chnp.common.utils.StringUtil;
+import chnp.common.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,9 +62,9 @@ public class MysqlUtils {
 	private String getDbUrl() {
 		StringBuilder urlParams = new StringBuilder(256);
 		for (String key : dbParams.keySet()) {
-			urlParams.append("&").append(key).append(dbParams.get(key));
+			urlParams.append("&").append(key).append("=").append(dbParams.get(key));
 		}
-		return "jdbc:mysql://" + dbHost + ":" + dbPort + (0 < dbParams.size() ? urlParams.substring(1) : "");
+		return "jdbc:mysql://" + dbHost + ":" + dbPort + (0 < dbParams.size() ? "?" + urlParams.substring(1) : "");
 	}
 
 	/**<p>获取数据库连接</p>
@@ -72,7 +72,7 @@ public class MysqlUtils {
 	 * @return 数据库连接
 	 * @throws SQLException 连接获取失败
 	 */
-	private Connection getConnection() throws SQLException {
+	public Connection getConnection() throws SQLException {
 		if (null == this.conn || this.conn.isClosed()) {
 			conn = DriverManager.getConnection(getDbUrl(), dbUser, dbPswd);
 		}
@@ -80,11 +80,25 @@ public class MysqlUtils {
 		return conn;
 	}
 
+	/**<p>判断数据库是否可用</p>
+	 *
+	 * @return true - 可用
+	 * @throws SQLException 数据库连接失败
+	 */
+	public boolean isAvailable() throws SQLException {
+		Connection c = getConnection();
+		if (null != c && !c.isClosed()) {
+			c.close();
+			return true;
+		}
+		return false;
+	}
+
 	/**<p>关闭数据库连接</p>
 	 *
 	 * @throws SQLException 连接关闭失败
 	 */
-	private void close() throws SQLException {
+	public void close() throws SQLException {
 		if (!conn.isClosed()) {
 			this.conn.close();
 		}
@@ -100,9 +114,9 @@ public class MysqlUtils {
 	 */
 	public List<Map<String, Object>> getMetaData(String dbName, String... tables) throws SQLException {
 		List<Map<String, Object>> dataSet = new ArrayList<>();
-		if(null == conn) conn = getConnection();
+		Connection c = getConnection();
 
-		DatabaseMetaData dbmd = conn.getMetaData();
+		DatabaseMetaData dbmd = c.getMetaData();
 		if(null == dbmd) throw new RuntimeException("未获取到指定数据库的元数据！");
 
 		// 遍历获取每一张表的元数据
@@ -128,10 +142,10 @@ public class MysqlUtils {
 				}else map.put("isKey", false);
 
 				map.put(MD_COLUMN_NAME, rs.getString("COLUMN_NAME"));// 字段名称：user_id
-				//map.put("normalName", StringUtil.upperCamelCase(rs.getString("COLUMN_NAME")));// 标准名称：UserId
-				//map.put("aliasName", StringUtil.toAliasName(rs.getString("COLUMN_NAME")));// 字段别名：ALIAS_USER_ID
-				//map.put("authName", StringUtil.toAuthName(rs.getString("COLUMN_NAME")));// 权限名称：userid
-				map.put(MD_COLUMN_FIELD_NAME, StringUtil.lowerCamelCase(rs.getString("COLUMN_NAME")));// 属性名称：userId
+				map.put("normalName", StringUtils.upperCamelCase(rs.getString("COLUMN_NAME")));// 标准名称：UserId
+				map.put("aliasName", StringUtils.toAliasName(rs.getString("COLUMN_NAME")));// 字段别名：ALIAS_USER_ID
+				map.put("authName", StringUtils.toAuthName(rs.getString("COLUMN_NAME")));// 权限名称：userid
+				map.put(MD_COLUMN_FIELD_NAME, StringUtils.lowerCamelCase(rs.getString("COLUMN_NAME")));// 属性名称：userId
 
 				map.put(MD_COLUMN_REMARKS, rs.getString("REMARKS"));// 字段注解：用户ID
 				map.put(MD_COLUMN_JAVA_TYPE, JavaType.valueOf(rs.getString("TYPE_NAME")));// Java数据类型名称：java.lang.Integer
@@ -153,16 +167,15 @@ public class MysqlUtils {
 			}
 
 			tableData.put(MD_TABLE_NAME, table);// 保存当前表名
-			tableData.put(MD_TABLE_CLASS_NAME, StringUtil.upperCamelCase(table));// 保存当前表的类名
-			tableData.put(MD_TABLE_INSTANCE_NAME, StringUtil.lowerCamelCase(table));// 保存当前表的实例名
-			//tableData.setAuthName(StringUtil.toAuthName(table));// 保存当前表的权限名
+			tableData.put(MD_TABLE_CLASS_NAME, StringUtils.upperCamelCase(table));// 保存当前表的类名
+			tableData.put(MD_TABLE_INSTANCE_NAME, StringUtils.lowerCamelCase(table));// 保存当前表的实例名
+			tableData.put("authName", StringUtils.toAuthName(table));// 保存当前表的权限名
 			tableData.put(MD_TABLE_COLUMNS, columns);// 保存当前表的字段信息
 			//tableData.setBasePackage(config.getBasePackage());
 
 			dataSet.add(tableData);// 保存当前表信息
 		}
 
-		close();
 		return dataSet;
 	}
 	
