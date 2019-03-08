@@ -93,7 +93,7 @@ public class GeneratorController {
 			config.generationBasePath = cfgGenerationPath.getConfigVal();
 
 			TemplateInfoQuery templateInfoQuery = new TemplateInfoQuery();
-			templateInfoQuery.setFilterCondition("id in (" + templateIds + ")");
+			templateInfoQuery.setAdditionalFilters("id in (" + templateIds + ")");
 			config.input(templateInfoService.findByCondition(templateInfoQuery));
 
 			config.generate();

@@ -1,8 +1,7 @@
-package chnp.manager.shiro.config;
+package chnp.manager.config.shiro;
 
-import chnp.manager.shiro.realm.CustomRealm;
+import chnp.manager.config.shiro.realm.CustomRealm;
 import org.apache.shiro.mgt.SecurityManager;
-import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.context.annotation.Bean;
