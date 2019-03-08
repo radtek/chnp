@@ -1,0 +1,129 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace必须与接口的全类名一致-->
+<mapper namespace="chnp.manager.generator.dao.GnrProjectDao">
+
+    <!-- 结果映射 -->
+    <resultMap id="gnrProjectMapper" type="chnp.manager.generator.model.domain.GnrProject">
+        <id column="id" property="id"></id>
+        <result column="project_name" property="projectName"></result>
+        <result column="create_user" property="createUser"></result>
+        <result column="create_time" property="createTime"></result>
+        <result column="modified_time" property="modifiedTime"></result>
+        <result column="project_desc" property="projectDesc"></result>
+    </resultMap>
+
+    <!-- 查询字段 -->
+    <sql id="columns">
+        <trim suffixOverrides=",">
+            id ,project_name ,create_user ,create_time ,modified_time ,project_desc ,
+            <if test="additionalColumns != null and additionalColumns != ''"><![CDATA[ ${ additionalColumns } , ]]></if>
+        </trim>
+    </sql>
+
+    <!-- 关联表 -->
+    <sql id="from">
+        <trim suffixOverrides=",">
+            from gnr_project ,
+        </trim>
+        <if test="additionalTables != null and additionalTables != ''"><![CDATA[ ${ additionalTables } ]]></if>
+    </sql>
+
+    <!-- 过滤条件 -->
+    <sql id="where">
+        <trim prefix="where" suffixOverrides="and">
+        	<![CDATA[ 1=1 and ]]>
+            <if test="id != null"><![CDATA[ gnr_project.id = #{ id } and ]]></if>
+            <if test="projectName != null"><![CDATA[ gnr_project.project_name = #{ projectName } and ]]></if>
+            <if test="createUser != null"><![CDATA[ gnr_project.create_user = #{ createUser } and ]]></if>
+            <if test="createTimeBegin != null"><![CDATA[ gnr_project.create_time >= #{ createTimeBegin } and ]]></if>
+            <if test="createTimeEnd != null"><![CDATA[ gnr_project.create_time < #{ createTimeEnd } and ]]></if>
+            <if test="modifiedTimeBegin != null"><![CDATA[ gnr_project.modified_time >= #{ modifiedTimeBegin } and ]]></if>
+            <if test="modifiedTimeEnd != null"><![CDATA[ gnr_project.modified_time < #{ modifiedTimeEnd } and ]]></if>
+            <if test="projectDesc != null"><![CDATA[ gnr_project.project_desc = #{ projectDesc } and ]]></if>
+            <if test="search != null and search != ''">
+                <![CDATA[
+                    (
+                        lower(gnr_project.project_name) like lower(concat('%',#{ search, jdbcType=VARCHAR},'%')) or
+                        lower(gnr_project.project_desc) like lower(concat('%',#{ search, jdbcType=VARCHAR},'%'))
+                    ) and
+                ]]>
+            </if>
+            <if test="additionalFilters != null and additionalFilters != ''"><![CDATA[ ${ additionalFilters } and ]]></if>
+        </trim>
+        <if test="additionalConstrains != null and additionalConstrains != ''"><![CDATA[ ${ additionalConstrains } ]]></if>
+    </sql>
+
+    <!-- 操作：插入数据 -->
+    <insert id="save" useGeneratedKeys="true">
+        INSERT INTO gnr_project
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id ,</if>
+            <if test="projectName != null">project_name ,</if>
+            <if test="createUser != null">create_user ,</if>
+            <if test="createTime != null">create_time ,</if>
+            <if test="modifiedTime != null">modified_time ,</if>
+            <if test="projectDesc != null">project_desc ,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{ id } ,</if>
+            <if test="projectName != null">#{ projectName } ,</if>
+            <if test="createUser != null">#{ createUser } ,</if>
+            <if test="createTime != null">#{ createTime } ,</if>
+            <if test="modifiedTime != null">#{ modifiedTime } ,</if>
+            <if test="projectDesc != null">#{ projectDesc } ,</if>
+        </trim>
+    </insert>
+
+    <!-- 操作：根据条件删除 -->
+    <delete id="delete">
+        delete gnr_project
+        <include refid="from"></include>
+        <include refid="where"></include>
+    </delete>
+
+    <!-- 操作：根据条件获取数据 -->
+    <select id="getByCondition" resultMap="gnrProjectMapper" useCache="false">
+        select <include refid="columns"></include>
+        <include refid="from"></include>
+        <include refid="where"></include>
+        limit 1
+    </select>
+
+    <!-- 操作：根据条件查询数据 -->
+    <select id="findByCondition" resultMap="gnrProjectMapper" useCache="false">
+        select <include refid="columns"></include>
+        <include refid="from"></include>
+        <include refid="where"></include>
+    </select>
+
+    <!-- 操作：根据条件分页查询数据 -->
+    <select id="findPage" resultMap="gnrProjectMapper" useCache="false">
+        select <include refid="columns"></include>
+        <include refid="from"></include>
+        <include refid="where"></include>
+        <if test="start != null and length != null "><![CDATA[ limit #{ start },#{ length } ]]></if>
+    </select>
+
+    <!-- 操作：根据条件统计数据 -->
+    <select id="countByCondition" resultType="java.lang.Long" useCache="false">
+        select count(*)
+        <include refid="from"></include>
+        <include refid="where"></include>
+    </select>
+
+    <!-- 操作：根据主键更新数据 -->
+    <update id="updateById">
+        update gnr_project
+        <trim prefix="set" suffixOverrides=",">
+            <if test="projectName != null">project_name = #{ projectName } ,</if>
+            <if test="createUser != null">create_user = #{ createUser } ,</if>
+            <if test="createTime != null">create_time = #{ createTime } ,</if>
+            <if test="modifiedTime != null">modified_time = #{ modifiedTime } ,</if>
+            <if test="projectDesc != null">project_desc = #{ projectDesc } ,</if>
+        </trim>
+        <trim prefix="where">
+            id = #{ id }
+        </trim>
+    </update>
+</mapper>

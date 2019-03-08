@@ -27,9 +27,14 @@
                                 <div class="table-search-left">
                                     <form id="template_search_form" class="form-inline">
                                         <div class="form-group">
-                                            <input name="search" class="form-control" placeholder="输入用户名">
+                                            <label class="control-label">项目：</label>
+                                            <select name="projectId" class="form-control">
+                                                <option value="">-- 请选择项目 --</option>
+                                                <#list projects as project>
+                                                <option value="${project.id}" title="${project.projectName}"><#if (project.projectName)?length gt 10>${project.projectName?substring(0, 10)}...<#else>${project.projectName}</#if></option>
+                                                </#list>
+                                            </select>
                                         </div>
-                                        <button class="btn btn-primary" type="button" onclick="generator.searching()"><i class="fa fa-search"></i>搜索</button>
                                     </form>
                                 </div>
                                 <div class="table-search-right"></div>
@@ -40,7 +45,7 @@
                                         <tr>
                                             <th class="table-check"><input type="checkbox" /></th>
                                             <th>模板名称</th>
-                                            <th>模板引擎</th>
+                                            <th>创建时间</th>
                                             <th>更新时间</th>
                                             <th class="table-operate">操作</th>
                                         </tr>
@@ -64,19 +69,25 @@
                                 <div class="form-group">
                                     <label for="orgType" class="col-sm-2 control-label">组织类型简写<i class="fa fa fa-question-circle" title="如：org、com、cn、edu等"></i>：</label>
                                     <div class="col-sm-3">
-                                        <input id="orgType" name="orgType" type="text" class="form-control">
+                                        <input id="orgType" name="orgType" type="text" class="form-control" placeholder="例如：com、cn">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="orgName" class="col-sm-2 control-label">组织名称简写<i class="fa fa fa-question-circle" title="如：baidu、sina、tencent等"></i>：</label>
                                     <div class="col-sm-3">
-                                        <input id="orgName" name="orgName" type="text" class="form-control">
+                                        <input id="orgName" name="orgName" type="text" class="form-control" placeholder="例如：tencent、alibaba">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="proName" class="col-sm-2 control-label">项目名称简写<i class="fa fa fa-question-circle" title="如：ai、weibo、wechat等"></i>：</label>
                                     <div class="col-sm-3">
-                                        <input id="proName" name="proName" type="text" class="form-control">
+                                        <input id="proName" name="proName" type="text" class="form-control" placeholder="例如：wechat、taobao">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="moduleName" class="col-sm-2 control-label">模块名称简写<i class="fa fa fa-question-circle" title="如：blog、manager等"></i>：</label>
+                                    <div class="col-sm-3">
+                                        <input id="moduleName" name="moduleName" type="text" class="form-control" placeholder="项目划分的具体模块">
                                     </div>
                                 </div>
                             </form>
@@ -85,37 +96,37 @@
                             <div class="col-sm-5">
                                 <form class="form-horizontal" action="/generator/test/db">
                                     <div class="form-group">
-                                        <label for="dbHost" class="col-sm-4 control-label">数据库<i class="fa fa fa-question-circle" title=""></i>：</label>
+                                        <label for="dbHost" class="col-sm-3 control-label">数据库<i class="fa fa fa-question-circle" title=""></i>：</label>
                                         <div class="col-sm-4">
-                                            <input id="dbHost" name="dbHost" type="text" class="form-control" placeholder="数据库的主机名或IP" value="localhost">
+                                            <input id="dbHost" name="dbHost" type="text" class="form-control" placeholder="数据库的主机名或IP" value="127.0.0.1">
                                         </div>
-                                        <div class="col-sm-2">
-                                            <input id="dbName" name="dbName" type="text" class="form-control" placeholder="库名">
-                                        </div>
-                                        <div class="col-sm-2">
+                                        <div class="col-sm-2" style="padding: 0 8px;">
                                             <input id="dbPort" name="dbPort" type="text" class="form-control" placeholder="端口" value="3306">
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <input id="dbName" name="dbName" type="text" class="form-control" placeholder="库名">
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="dbPswd" class="col-sm-4 control-label">表集合<i class="fa fa fa-question-circle" title=""></i>：</label>
-                                        <div class="col-sm-8">
+                                        <label for="dbPswd" class="col-sm-3 control-label">表集合<i class="fa fa fa-question-circle" title=""></i>：</label>
+                                        <div class="col-sm-9">
                                             <textarea id="tables" name="tables" type="text" class="form-control" rows="3" placeholder="待生成的表集合"></textarea>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="dbUser" class="col-sm-4 control-label">用户名称<i class="fa fa fa-question-circle" title=""></i>：</label>
-                                        <div class="col-sm-8">
+                                        <label for="dbUser" class="col-sm-3 control-label">用户名称<i class="fa fa fa-question-circle" title=""></i>：</label>
+                                        <div class="col-sm-9">
                                             <input id="dbUser" name="dbUser" type="text" class="form-control" placeholder="数据库的合法用户" value="root">
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="dbPswd" class="col-sm-4 control-label">用户密码<i class="fa fa fa-question-circle" title=""></i>：</label>
-                                        <div class="col-sm-8">
+                                        <label for="dbPswd" class="col-sm-3 control-label">用户密码<i class="fa fa fa-question-circle" title=""></i>：</label>
+                                        <div class="col-sm-9">
                                             <input id="dbPswd" name="dbPswd" type="password" class="form-control" placeholder="用户对应的密码">
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <div class="col-sm-offset-4 col-sm-8">
+                                        <div class="col-sm-offset-3 col-sm-9">
                                             <button class="btn btn-primary" type="button" onclick="generator.testDB($(this))"><i class="fa fa-link"></i>连接</button>
                                         </div>
                                     </div>
@@ -151,6 +162,11 @@
             };
 
             $(function() {
+
+                $("#template_search_form").find('select[name="projectId"]').on("change", function(e) {
+                    generator.searching();
+                });
+
                 CHNPStepTab({
                     containerSelector: "div.m-steptab",
                     beforeNext: function(index) {
@@ -171,7 +187,7 @@
                         }
                     },
                     beforeFinish: function() {
-                        var params = [];
+                        var params = $('#tab1').find('form').serializeArray();
                         // FROM 1 To 2
                         var selectItems = generator.dataTablesUtil.getSelectedItems();
                         if (selectItems === null) {
@@ -203,15 +219,15 @@
                 generator.dataTablesUtil = new DatatablesUtil();
                 generator.dataTablesUtil.init({
                     container: "#tTemplate",
-                    serverUrl: "/templateinfo/page",
-                    columnNames: ["name", "engine", "updateTimeString"],
+                    serverUrl: "/gnrtemplate/page",
+                    columnNames: ["templateName","createTimeString","modifiedTimeString"],
                     operate: {
                         "data": "id",
                         "className": "table-operate",
                         "render": function (data, type, full, meta) {
-                            return '&nbsp;<button class="btn-default op-btn-view" type="button" data-url="/templateInfo/view?id=' + data + '" onclick="modal($(this))"><i class="fa fa-eye"></i>查看</button>' +
-                                    '&nbsp;<button class="btn-primary op-btn-edit" type="button" data-url="/templateInfo/edit?id=' + data + '" onclick="modal($(this))"><i class="fa fa-edit"></i>编辑</button>' +
-                                    '&nbsp;<button class="btn-danger op-btn-del" type="button" data-url="/templateInfo/del?ids=' + data + '" onclick=""><i class="fa fa-trash"></i>删除</button>';
+                            return '&nbsp;<button class="btn-default op-btn-view" type="button" data-url="/gnrtemplate/view?id=' + data + '" onclick="modal($(this))"><i class="fa fa-eye"></i>查看</button>' +
+                                    '&nbsp;<button class="btn-primary op-btn-edit" type="button" data-url="/gnrtemplate/edit?id=' + data + '" onclick="modal($(this))"><i class="fa fa-edit"></i>编辑</button>' +
+                                    '&nbsp;<button class="btn-danger op-btn-del" type="button" data-url="/gnrtemplate/del?ids=' + data + '" onclick=""><i class="fa fa-trash"></i>删除</button>';
                         }
                     },
                     dataTable: {

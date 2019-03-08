@@ -1,0 +1,134 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace必须与接口的全类名一致-->
+<mapper namespace="chnp.manager.generator.dao.GnrFilepathDao">
+
+    <!-- 结果映射 -->
+    <resultMap id="gnrFilepathMapper" type="chnp.manager.generator.model.domain.GnrFilepath">
+        <id column="id" property="id"></id>
+        <result column="project_id" property="projectId"></result>
+        <result column="output_path" property="outputPath"></result>
+        <result column="file_suffix" property="fileSuffix"></result>
+        <result column="create_user" property="createUser"></result>
+        <result column="create_time" property="createTime"></result>
+        <result column="modified_time" property="modifiedTime"></result>
+    </resultMap>
+
+    <!-- 查询字段 -->
+    <sql id="columns">
+        <trim suffixOverrides=",">
+            id ,project_id ,output_path ,file_suffix ,create_user ,create_time ,modified_time ,
+            <if test="additionalColumns != null and additionalColumns != ''"><![CDATA[ ${ additionalColumns } , ]]></if>
+        </trim>
+    </sql>
+
+    <!-- 关联表 -->
+    <sql id="from">
+        <trim suffixOverrides=",">
+            from gnr_filepath ,
+        </trim>
+        <if test="additionalTables != null and additionalTables != ''"><![CDATA[ ${ additionalTables } ]]></if>
+    </sql>
+
+    <!-- 过滤条件 -->
+    <sql id="where">
+        <trim prefix="where" suffixOverrides="and">
+        	<![CDATA[ 1=1 and ]]>
+            <if test="id != null"><![CDATA[ gnr_filepath.id = #{ id } and ]]></if>
+            <if test="projectId != null"><![CDATA[ gnr_filepath.project_id = #{ projectId } and ]]></if>
+            <if test="outputPath != null"><![CDATA[ gnr_filepath.output_path = #{ outputPath } and ]]></if>
+            <if test="fileSuffix != null"><![CDATA[ gnr_filepath.file_suffix = #{ fileSuffix } and ]]></if>
+            <if test="createUser != null"><![CDATA[ gnr_filepath.create_user = #{ createUser } and ]]></if>
+            <if test="createTimeBegin != null"><![CDATA[ gnr_filepath.create_time >= #{ createTimeBegin } and ]]></if>
+            <if test="createTimeEnd != null"><![CDATA[ gnr_filepath.create_time < #{ createTimeEnd } and ]]></if>
+            <if test="modifiedTimeBegin != null"><![CDATA[ gnr_filepath.modified_time >= #{ modifiedTimeBegin } and ]]></if>
+            <if test="modifiedTimeEnd != null"><![CDATA[ gnr_filepath.modified_time < #{ modifiedTimeEnd } and ]]></if>
+            <if test="search != null and search != ''">
+                <![CDATA[
+                    (
+                        lower(gnr_filepath.output_path) like lower(concat('%',#{ search, jdbcType=VARCHAR},'%')) or
+                        lower(gnr_filepath.file_suffix) like lower(concat('%',#{ search, jdbcType=VARCHAR},'%')) or
+                    ) and
+                ]]>
+            </if>
+            <if test="additionalFilters != null and additionalFilters != ''"><![CDATA[ ${ additionalFilters } and ]]></if>
+        </trim>
+        <if test="additionalConstrains != null and additionalConstrains != ''"><![CDATA[ ${ additionalConstrains } ]]></if>
+    </sql>
+
+    <!-- 操作：插入数据 -->
+    <insert id="save" useGeneratedKeys="true">
+        INSERT INTO gnr_filepath
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id ,</if>
+            <if test="projectId != null">project_id ,</if>
+            <if test="outputPath != null">output_path ,</if>
+            <if test="fileSuffix != null">file_suffix ,</if>
+            <if test="createUser != null">create_user ,</if>
+            <if test="createTime != null">create_time ,</if>
+            <if test="modifiedTime != null">modified_time ,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{ id } ,</if>
+            <if test="projectId != null">#{ projectId } ,</if>
+            <if test="outputPath != null">#{ outputPath } ,</if>
+            <if test="fileSuffix != null">#{ fileSuffix } ,</if>
+            <if test="createUser != null">#{ createUser } ,</if>
+            <if test="createTime != null">#{ createTime } ,</if>
+            <if test="modifiedTime != null">#{ modifiedTime } ,</if>
+        </trim>
+    </insert>
+
+    <!-- 操作：根据条件删除 -->
+    <delete id="delete">
+        delete gnr_filepath
+        <include refid="from"></include>
+        <include refid="where"></include>
+    </delete>
+
+    <!-- 操作：根据条件获取数据 -->
+    <select id="getByCondition" resultMap="gnrFilepathMapper" useCache="false">
+        select <include refid="columns"></include>
+        <include refid="from"></include>
+        <include refid="where"></include>
+        limit 1
+    </select>
+
+    <!-- 操作：根据条件查询数据 -->
+    <select id="findByCondition" resultMap="gnrFilepathMapper" useCache="false">
+        select <include refid="columns"></include>
+        <include refid="from"></include>
+        <include refid="where"></include>
+    </select>
+
+    <!-- 操作：根据条件分页查询数据 -->
+    <select id="findPage" resultMap="gnrFilepathMapper" useCache="false">
+        select <include refid="columns"></include>
+        <include refid="from"></include>
+        <include refid="where"></include>
+        <if test="start != null and length != null "><![CDATA[ limit #{ start },#{ length } ]]></if>
+    </select>
+
+    <!-- 操作：根据条件统计数据 -->
+    <select id="countByCondition" resultType="java.lang.Long" useCache="false">
+        select count(*)
+        <include refid="from"></include>
+        <include refid="where"></include>
+    </select>
+
+    <!-- 操作：根据主键更新数据 -->
+    <update id="updateById">
+        update gnr_filepath
+        <trim prefix="set" suffixOverrides=",">
+            <if test="projectId != null">project_id = #{ projectId } ,</if>
+            <if test="outputPath != null">output_path = #{ outputPath } ,</if>
+            <if test="fileSuffix != null">file_suffix = #{ fileSuffix } ,</if>
+            <if test="createUser != null">create_user = #{ createUser } ,</if>
+            <if test="createTime != null">create_time = #{ createTime } ,</if>
+            <if test="modifiedTime != null">modified_time = #{ modifiedTime } ,</if>
+        </trim>
+        <trim prefix="where">
+            id = #{ id }
+        </trim>
+    </update>
+</mapper>

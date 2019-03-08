@@ -1,0 +1,204 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace必须与接口的全类名一致-->
+<mapper namespace="chnp.manager.generator.dao.GnrTemplateDao">
+
+    <!-- 结果映射 -->
+    <resultMap id="gnrTemplateMapper" type="chnp.manager.generator.model.domain.GnrTemplate">
+        <id column="id" property="id"></id>
+        <result column="project_id" property="projectId"></result>
+        <result column="template_name" property="templateName"></result>
+	    <result column="template_type" property="templateType"></result>
+        <result column="content_id" property="contentId"></result>
+        <result column="create_time" property="createTime"></result>
+        <result column="modified_time" property="modifiedTime"></result>
+    </resultMap>
+
+	<resultMap id="gnrTemplateCmplxMapper" type="chnp.manager.generator.model.domain.GnrTemplate">
+		<id column="id" property="id"></id>
+		<result column="project_id" property="projectId"></result>
+		<result column="template_name" property="templateName"></result>
+		<result column="template_type" property="templateType"></result>
+		<result column="content_id" property="contentId"></result>
+		<result column="create_time" property="createTime"></result>
+		<result column="modified_time" property="modifiedTime"></result>
+		<association column="project_id" property="gnrProject" resultMap="gnrProjectMapper" columnPrefix="p_"/>
+		<association column="content_id" property="gnrContent" resultMap="gnrContentMapper" columnPrefix="c_"/>
+	</resultMap>
+    <resultMap id="gnrProjectMapper" type="chnp.manager.generator.model.domain.GnrProject">
+        <id column="id" property="id"></id>
+        <result column="project_name" property="projectName"></result>
+        <result column="create_user" property="createUser"></result>
+        <result column="create_time" property="createTime"></result>
+        <result column="modified_time" property="modifiedTime"></result>
+        <result column="project_desc" property="projectDesc"></result>
+    </resultMap>
+	<resultMap id="gnrContentMapper" type="chnp.manager.generator.model.domain.GnrContent">
+		<id column="id" property="id"></id>
+		<result column="content" property="content"></result>
+		<result column="create_time" property="createTime"></result>
+		<result column="modified_time" property="modifiedTime"></result>
+	</resultMap>
+
+    <!-- 查询字段 -->
+    <sql id="columns">
+        <trim suffixOverrides=",">
+            id ,project_id ,template_name ,template_type, content_id ,create_time ,modified_time ,
+            <if test="additionalColumns != null and additionalColumns != ''"><![CDATA[ ${ additionalColumns } , ]]></if>
+        </trim>
+    </sql>
+
+    <!-- 关联表 -->
+    <sql id="from">
+        <trim suffixOverrides=",">
+            from gnr_template ,
+        </trim>
+        <if test="additionalTables != null and additionalTables != ''"><![CDATA[ ${ additionalTables } ]]></if>
+    </sql>
+
+    <!-- 过滤条件 -->
+    <sql id="where">
+        <trim prefix="where" suffixOverrides="and">
+        	<![CDATA[ 1=1 and ]]>
+            <if test="id != null"><![CDATA[ gnr_template.id = #{ id } and ]]></if>
+            <if test="projectId != null"><![CDATA[ gnr_template.project_id = #{ projectId } and ]]></if>
+            <if test="templateName != null"><![CDATA[ gnr_template.template_name = #{ templateName } and ]]></if>
+	        <if test="templateType != null"><![CDATA[ gnr_template.template_type = #{ templateType } and ]]></if>
+            <if test="contentId != null"><![CDATA[ gnr_template.content_id = #{ contentId } and ]]></if>
+            <if test="createTimeBegin != null"><![CDATA[ gnr_template.create_time >= #{ createTimeBegin } and ]]></if>
+            <if test="createTimeEnd != null"><![CDATA[ gnr_template.create_time < #{ createTimeEnd } and ]]></if>
+            <if test="modifiedTimeBegin != null"><![CDATA[ gnr_template.modified_time >= #{ modifiedTimeBegin } and ]]></if>
+            <if test="modifiedTimeEnd != null"><![CDATA[ gnr_template.modified_time < #{ modifiedTimeEnd } and ]]></if>
+            <if test="search != null and search != ''">
+                <![CDATA[
+                    (
+                        lower(gnr_template.template_name) like lower(concat('%',#{ search, jdbcType=VARCHAR},'%')) or
+                    ) and
+                ]]>
+            </if>
+            <if test="additionalFilters != null and additionalFilters != ''"><![CDATA[ ${ additionalFilters } and ]]></if>
+        </trim>
+        <if test="additionalConstrains != null and additionalConstrains != ''"><![CDATA[ ${ additionalConstrains } ]]></if>
+    </sql>
+
+	<select id="getByAssociation" resultMap="gnrTemplateCmplxMapper" useCache="false">
+		select
+		t.* ,
+		p.id as p_id ,
+		p.project_name as p_project_name ,
+		p.create_user as p_create_user ,
+		p.create_time as p_create_time ,
+		p.modified_time as p_modified_time ,
+		p.project_desc as p_project_desc,
+		c.id as c_id ,
+		c.content as c_content ,
+		c.create_time as c_create_time ,
+		c.modified_time as c_modified_time
+		from (
+			select<include refid="columns"/>
+			from gnr_template
+			<include refid="where"/>
+			limit 1
+		) t
+		left join gnr_project p on p.id=t.project_id
+		left join gnr_content c on c.id=t.content_id
+	</select>
+
+	<select id="findByAssociation" resultMap="gnrTemplateCmplxMapper" useCache="false">
+		select
+		t.* ,
+		p.id as p_id ,
+		p.project_name as p_project_name ,
+		p.create_user as p_create_user ,
+		p.create_time as p_create_time ,
+		p.modified_time as p_modified_time ,
+		p.project_desc as p_project_desc,
+		c.id as c_id ,
+		c.content as c_content ,
+		c.create_time as c_create_time ,
+		c.modified_time as c_modified_time
+		from (
+			select <include refid="columns"/>
+			from gnr_template
+			<include refid="where"/>
+			<if test="start != null and length != null "><![CDATA[ limit #{ start },#{ length } ]]></if>
+		) t
+		left join gnr_project p on p.id=t.project_id
+		left join gnr_content c on c.id=t.content_id
+	</select>
+
+    <!-- 操作：插入数据 -->
+    <insert id="save" useGeneratedKeys="true">
+        INSERT INTO gnr_template
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id ,</if>
+            <if test="projectId != null">project_id ,</if>
+            <if test="templateName != null">template_name ,</if>
+	        <if test="templateType != null">template_type ,</if>
+            <if test="contentId != null">content_id ,</if>
+            <if test="createTime != null">create_time ,</if>
+            <if test="modifiedTime != null">modified_time ,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{ id } ,</if>
+            <if test="projectId != null">#{ projectId } ,</if>
+            <if test="templateName != null">#{ templateName } ,</if>
+	        <if test="templateType != null">#{ templateType } ,</if>
+            <if test="contentId != null">#{ contentId } ,</if>
+            <if test="createTime != null">#{ createTime } ,</if>
+            <if test="modifiedTime != null">#{ modifiedTime } ,</if>
+        </trim>
+    </insert>
+
+    <!-- 操作：根据条件删除 -->
+    <delete id="delete">
+        delete gnr_template
+        <include refid="from"></include>
+        <include refid="where"></include>
+    </delete>
+
+    <!-- 操作：根据条件获取数据 -->
+    <select id="getByCondition" resultMap="gnrTemplateMapper" useCache="false">
+        select <include refid="columns"></include>
+        <include refid="from"></include>
+        <include refid="where"></include>
+        limit 1
+    </select>
+
+    <!-- 操作：根据条件查询数据 -->
+    <select id="findByCondition" resultMap="gnrTemplateMapper" useCache="false">
+        select <include refid="columns"></include>
+        <include refid="from"></include>
+        <include refid="where"></include>
+    </select>
+
+    <!-- 操作：根据条件分页查询数据 -->
+    <select id="findPage" resultMap="gnrTemplateMapper" useCache="false">
+        select <include refid="columns"></include>
+        <include refid="from"></include>
+        <include refid="where"></include>
+    </select>
+
+    <!-- 操作：根据条件统计数据 -->
+    <select id="countByCondition" resultType="java.lang.Long" useCache="false">
+        select count(*)
+        <include refid="from"></include>
+        <include refid="where"></include>
+    </select>
+
+    <!-- 操作：根据主键更新数据 -->
+    <update id="updateById">
+        update gnr_template
+        <trim prefix="set" suffixOverrides=",">
+            <if test="projectId != null">project_id = #{ projectId } ,</if>
+            <if test="templateName != null">template_name = #{ templateName } ,</if>
+	        <if test="templateType != null">template_type = #{ templateType } ,</if>
+            <if test="contentId != null">content_id = #{ contentId } ,</if>
+            <if test="createTime != null">create_time = #{ createTime } ,</if>
+            <if test="modifiedTime != null">modified_time = #{ modifiedTime } ,</if>
+        </trim>
+        <trim prefix="where">
+            id = #{ id }
+        </trim>
+    </update>
+</mapper>

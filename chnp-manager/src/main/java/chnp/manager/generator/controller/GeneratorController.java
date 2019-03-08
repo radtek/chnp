@@ -1,8 +1,13 @@
-package chnp.manager.mvc.controller;
+package chnp.manager.generator.controller;
 
 import chnp.common.mysql.MysqlUtils;
 import chnp.manager.common.entity.GeneratorConfig;
 import chnp.manager.common.entity.ResponseJson;
+import chnp.manager.generator.model.domain.GnrProject;
+import chnp.manager.generator.model.query.GnrProjectQuery;
+import chnp.manager.generator.model.query.GnrTemplateQuery;
+import chnp.manager.generator.service.GnrProjectService;
+import chnp.manager.generator.service.GnrTemplateService;
 import chnp.manager.mvc.model.domain.TsConfig;
 import chnp.manager.mvc.model.query.TemplateInfoQuery;
 import chnp.manager.mvc.service.TemplateInfoService;
@@ -27,10 +32,15 @@ public class GeneratorController {
 	@Autowired
 	private TsConfigService tsConfigService;
 	@Autowired
-	private TemplateInfoService templateInfoService;
+	private GnrProjectService gnrProjectService;
+	@Autowired
+	private GnrTemplateService gnrTemplateService;
 
 	@RequestMapping
 	public String index(Model model) {
+		GnrProjectQuery query = new GnrProjectQuery();
+		query.setAdditionalConstrains("order by create_time desc");
+		model.addAttribute("projects", gnrProjectService.findByCondition(query));
 
 		return "generator/index";
 	}
@@ -72,7 +82,9 @@ public class GeneratorController {
 	@RequiresPermissions(value = {"generator"})
 	@ResponseBody
 	@RequestMapping("/generate")
-	public String generate(@RequestParam(name = "templateIds") String templateIds, GeneratorConfig config) {
+	public String generate(@RequestParam(name = "projectId") Integer projectId,
+						   @RequestParam(name = "templateIds") String templateIds,
+						   GeneratorConfig config) {
 		ResponseJson responseJson = new ResponseJson();
 
 		try {
@@ -92,11 +104,14 @@ public class GeneratorController {
 			TsConfig cfgGenerationPath = tsConfigService.getByKey("generation_base_path");
 			config.generationBasePath = cfgGenerationPath.getConfigVal();
 
-			TemplateInfoQuery templateInfoQuery = new TemplateInfoQuery();
+			GnrTemplateQuery templateInfoQuery = new GnrTemplateQuery();
+			templateInfoQuery.setProjectId(projectId);
 			templateInfoQuery.setAdditionalFilters("id in (" + templateIds + ")");
-			config.input(templateInfoService.findByCondition(templateInfoQuery));
+			config.input(gnrTemplateService.findByAssociation(templateInfoQuery));
 
 			config.generate();
+
+			responseJson.success("代码已生成");
 		}catch (Exception e) {
 			log.error("数据库连接失败", e);
 			responseJson.error("连接失败：" + e.toString());
