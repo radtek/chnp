@@ -3,6 +3,7 @@ package chnp.manager.common.entity;
 import chnp.common.mysql.MysqlUtils;
 import chnp.common.utils.FileUtils;
 import chnp.common.utils.StringUtils;
+import chnp.manager.generator.model.domain.GnrTemplate;
 import chnp.manager.mvc.model.domain.TemplateInfo;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -22,10 +23,13 @@ public class GeneratorConfig {
 	public static final String PLACEHOLDER_DIR_PAGE = "${AuthName}";
 	public static final String PLACEHOLDER_DIR_CLASS = "${BasePackageDir}";
 	public static final String PLACEHOLDER_FILE_CLASS = "${ClassName}";
+	public static final String PAGE_DIR = "src/resources/pages/${AuthName}/";
+	public static final String CODE_DIR = "src/resources/java/${BasePackageDir}/";
 
 	private String orgType;
 	private String orgName;
 	private String proName;
+	private String moduleName;
 	public String getOrgType() {
 		return orgType;
 	}
@@ -48,6 +52,14 @@ public class GeneratorConfig {
 
 	public void setProName(String proName) {
 		this.proName = proName;
+	}
+
+	public String getModuleName() {
+		return moduleName;
+	}
+
+	public void setModuleName(String moduleName) {
+		this.moduleName = moduleName;
 	}
 
 	private String dbHost;
@@ -123,7 +135,19 @@ public class GeneratorConfig {
 	 * @return 基本包路径
 	 */
 	public String getBasePackage() {
-		return orgType + "." + orgName + "." + proName;
+		StringBuilder sb = new StringBuilder();
+		if (!StringUtils.isEmpty(orgType)) sb.append(".").append(orgType);
+		if (!StringUtils.isEmpty(orgName)) sb.append(".").append(orgName);
+		if (!StringUtils.isEmpty(proName)) sb.append(".").append(proName);
+		return sb.length() > 0 ? sb.substring(1) : "com";
+	}
+
+	public String getPackage() {
+		String basePackage = getBasePackage();
+		if (!StringUtils.isEmpty(moduleName)) {
+			return basePackage + "." + moduleName;
+		}
+		return basePackage;
 	}
 
 	public void generate() throws Exception {
@@ -144,6 +168,7 @@ public class GeneratorConfig {
 			log.info("开始自动生成{}表的代码...", data.get(MysqlUtils.MD_TABLE_NAME));
 
 			data.put("basePackage", getBasePackage());
+			data.put("package", getPackage());
 
 			// 模板文件
 			List<Map<String, String>> templateFiles = getAllFiles(null, (String) data.get(MysqlUtils.MD_TABLE_CLASS_NAME));
@@ -176,9 +201,9 @@ public class GeneratorConfig {
 	 * @param templateInfos 模板信息集合
 	 * @throws IOException 生成失败
 	 */
-	public void input(List<TemplateInfo> templateInfos) throws IOException {
-		for (TemplateInfo templateInfo : templateInfos) {
-			String templateFilePath = templateBasePath + templateInfo.getFilePath() + templateInfo.getName();
+	public void input(List<GnrTemplate> templateInfos) throws IOException {
+		for (GnrTemplate templateInfo : templateInfos) {
+			String templateFilePath = templateBasePath + (1 == templateInfo.getTemplateType() ? PAGE_DIR : CODE_DIR) + templateInfo.getTemplateName();
 			File templateFile = new File(templateFilePath);
 			if (!templateFile.getParentFile().exists()) {
 				templateFile.getParentFile().mkdirs();
@@ -187,7 +212,7 @@ public class GeneratorConfig {
 
 			OutputStreamWriter out = new OutputStreamWriter(
 					new FileOutputStream(templateFilePath),"UTF-8");
-			out.write(templateInfo.getTemplate());
+			out.write(templateInfo.getGnrContent().getContent());
 			out.flush();
 			out.close();
 		}
@@ -212,7 +237,7 @@ public class GeneratorConfig {
 			String targetFilePath = generationBasePath +
 					fileRelPath
 							.replace(PLACEHOLDER_DIR_PAGE, className.toLowerCase())
-							.replace(PLACEHOLDER_DIR_CLASS, getBasePackage().replace(".", "/"));
+							.replace(PLACEHOLDER_DIR_CLASS, getPackage().replace(".", "/"));
 			map.put("targetFileDir",  targetFilePath.substring(0, targetFilePath.lastIndexOf("/")));
 			map.put("targetFileName", file.getName().replace(PLACEHOLDER_FILE_CLASS, className));
 

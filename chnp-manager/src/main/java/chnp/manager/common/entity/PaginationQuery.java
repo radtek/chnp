@@ -26,7 +26,9 @@ public abstract class PaginationQuery extends CommonQuery {
 	 * </p>
 	 *
 	 */
-	private Integer start = 0;
+	private Integer start;
+
+	private Integer pageNo;
 
 	/**<p>页长</p>
 	 * <p>
@@ -34,7 +36,7 @@ public abstract class PaginationQuery extends CommonQuery {
 	 * </p>
 	 *
 	 */
-	private Integer length = 10;
+	private Integer length;
 
 	private List<Map<String, String>> order;
 
@@ -55,11 +57,22 @@ public abstract class PaginationQuery extends CommonQuery {
 	}
 
 	public Integer getStart() {
-		return start;
+		if (null != pageNo && null != length) {
+			return (pageNo - 1) * length;
+		}
+		return null;
 	}
 
 	public void setStart(Integer start) {
 		this.start = start;
+	}
+
+	public Integer getPageNo() {
+		return pageNo;
+	}
+
+	public void setPageNo(Integer pageNo) {
+		this.pageNo = pageNo;
 	}
 
 	public Integer getLength() {
