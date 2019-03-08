@@ -23,7 +23,7 @@ var DatatablesUtil = function() {
                     var nd = [];
                     nd.push({name:"search", value:d.search.value});
                     nd.push({name:"draw", value:d.draw});
-                    nd.push({name:"start", value:d.start});
+                    nd.push({name:"pageNo", value:d.start / d.length + 1});
                     nd.push({name:"length", value:d.length});
                     //nd.push({name:"order", value:d.order});
                     $.extend(nd, additionalParams);

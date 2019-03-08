@@ -1,0 +1,298 @@
+.imfw-main{
+	position: absolute;
+	top: 50px;
+	left: 50px;
+	z-index: 20;
+	width: 250px;
+	background: url("../img/imfw-bg-1.jpg") no-repeat;
+	padding: 2px;
+	box-shadow: 0 0 3px #000;
+	color: white;
+}
+
+
+/*---------- 标题栏 START ----------*/
+.imfw-main-title{
+	display: flex;
+	font-size: 12px;
+}
+.imfw-main-title> .imfw-main-title-text{
+	flex: 1 1 auto;
+	display: flex;
+	align-items: center;
+	padding: 0 3px;
+	font-weight: bold;
+}
+.imfw-main-title> .imfw-main-title-btns{
+	flex: 0 0 auto;
+	display: flex;
+	align-items: center;
+	cursor: default;
+}
+.imfw-main-title> .imfw-main-title-btns> i{
+	margin: 5px 3px;
+	cursor: pointer;
+}
+.imfw-main-title:hover{
+	cursor: move;
+}
+/*---------- 标题栏 END   ----------*/
+
+
+/*---------- 用户信息 START ----------*/
+.imfw-main-user{
+	padding: 10px;
+	display: flex;
+}
+.imfw-main-user> .imfw-main-user-imag{
+	flex: 0 0 auto;
+}
+.imfw-main-user> .imfw-main-user-imag> img{
+	width: 50px;
+	height: 50px;
+	border: 2px solid RGBA(255,255,255,0.7);
+}
+.imfw-main-user> .imfw-main-user-info{
+	flex: 1 1 auto;
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: stretch;
+	padding: 0 0 0 10px;
+}
+.imfw-main-user> .imfw-main-user-info> *{
+	flex: 1 1 auto;
+	display: flex;
+	align-items: center;
+	font-size: 12px;
+}
+.imfw-main-user> .imfw-main-user-info> .user-info-name{
+
+}
+.imfw-main-user> .imfw-main-user-info> .user-info-decl{
+	box-shadow: 0 0 3px RGBA(255,255,255,0.7);
+}
+/*---------- 用户信息 END   ----------*/
+
+
+/*---------- 搜索框 START ----------*/
+.imfw-main-search{
+	padding: 5px 0;
+	display: flex;
+}
+.imfw-main-search> input{
+	flex: 1 1 auto;
+	height: 22px;
+	font-size: 12px;
+}
+/*---------- 搜索框 END   ----------*/
+
+
+/*---------- 内容区域 START ----------*/
+.imfw-main-body{
+	background-color: #dfe9ea;
+}
+.imfw-main-body> .imfw-main-contact-title{
+	display: flex;
+	box-shadow: 0 1px 2px RGBA(0,0,0,0.2);
+	line-height: 28px;
+	font-size: 12px;
+	color: #a09f9f;
+}
+.imfw-main-body> .imfw-main-contact-title> *{
+	flex: 1 1 auto;
+	text-align: center;
+	cursor: pointer;
+}
+.imfw-main-body> .imfw-main-contact-title> *.active{
+	border-bottom: 2px solid #7f949a;
+	color: black;
+}
+.imfw-main-body> .imfw-main-contact-body{
+	color: black;
+	font-size: 12px;
+	padding: 10px;
+	height: 300px;
+}
+.imfw-main-body> .imfw-main-contact-tools{
+	height: 40px;
+	box-shadow: 0 -1px 2px RGBA(0,0,0,0.2);
+	display: flex;
+	align-items: center;
+	font-size: 20px;
+	color: RGBA(126,124,187,0.5);
+}
+.imfw-main-body> .imfw-main-contact-tools> i{
+	flex: 0 0 auto;
+	margin: 0 10px;
+	cursor: pointer;
+}
+.imfw-main-body> .imfw-main-contact-tools> i:hover{
+	color: RGBA(126,124,187,1);
+}
+/*---------- 内容区域 END   ----------*/
+
+
+.user-group{
+	margin: 5px 0;
+}
+
+.user-group-title> i{
+	transition: transform 0.1s;
+}
+.user-group-title+ .user-list{
+	display: none;
+}
+.user-group-title:hover{
+	cursor: pointer;
+}
+.user-group-title.active> i{
+	transform: rotate(90deg);
+}
+.user-group-title.active+ .user-list{
+	display: block;
+}
+
+.user-group> .user-list> .user{
+	padding: 5px 0 5px 10px;
+	font-size: 10px;
+	display: flex;
+}
+.user-group> .user-list> .user> img{
+	width: 40px;
+	height: 40px;
+}
+.user-group> .user-list> .user> div{
+	padding-left: 5px;
+	display: flex;
+	flex-flow: column nowrap;
+}
+.user-group> .user-list> .user> div> *{
+	flex: 1 1 auto;
+}
+.user-group> .user-list> .user> div> *:first-child{
+	font-weight:bold;
+}
+.user-group> .user-list> .user:hover{
+	cursor: pointer;
+	background-color: #eee;
+}
+
+
+
+
+
+.imfw-msg{
+	position: absolute;
+	top: 50px;
+	left: 400px;
+	z-index: 21;
+	width: 600px;
+	box-shadow: 0 0 3px #000;
+	color: black;
+	background-color: white;
+}
+
+/*---------- 标题栏 START ----------*/
+.imfw-msg> .imfw-msg-title{
+	background-color: #7f9bc3;
+	text-align: center;
+	padding: 5px;
+	display: flex;
+	align-items: center;
+	cursor: move;
+}
+.imfw-msg> .imfw-msg-title> div:first-child{
+	flex: 1 1 auto;
+	font-weight: bold;
+}
+.imfw-msg> .imfw-msg-title> div:last-child{
+	flex: 0 0 auto;
+	display: flex;
+	align-items: center;
+}
+/*---------- 标题栏 END ----------*/
+
+
+/*---------- 内容区域 START ----------*/
+.imfw-msg> .imfw-msg-content{
+	height: 300px;
+	padding: 10px;
+	overflow-y: auto;
+}
+/*---------- 内容区域 END ----------*/
+
+
+/*---------- 输入区域 START ----------*/
+.imfw-msg> .imfw-msg-input{
+
+}
+.imfw-msg> .imfw-msg-input> .imfw-msg-input-tools{
+	border-top: 1px solid RGBA(0,0,0,0.2);
+	padding: 5px;
+	cursor: move;
+}
+.imfw-msg> .imfw-msg-input> .imfw-msg-input-tools> i{
+	font-size: 20px;
+}
+.imfw-msg> .imfw-msg-input> .imfw-msg-input-tools> i:hover{
+	background-color: #ddd;
+}
+.imfw-msg> .imfw-msg-input> .imfw-msg-input-body{
+
+}
+.imfw-msg> .imfw-msg-input> .imfw-msg-input-body> textarea{
+	width: 100%;
+	resize: none;
+	border: none;
+	outline: none;
+	padding: 5px;
+	box-sizing: border-box;
+}
+.imfw-msg> .imfw-msg-input> .imfw-msg-input-btns{
+	text-align: right;
+	padding: 5px;
+	cursor: move;
+}
+/*---------- 输入区域 END ----------*/
+
+.imfw-main i, .imfw-msg i{
+	padding: 5px;
+	cursor: pointer;
+}
+.imfw-main i:hover, .imfw-msg i:hover{
+	background-color: RGBA(221,221,221,0.2);
+}
+
+/** ********** ********** **********
+ * IMFW会话消息样式   -- START --  *
+ ** ********** ********** **********/
+.imfw-message{
+	display: flex;
+	font-size: 12px;
+	margin-bottom: 3px;
+}
+.imfw-message.self> *:first-child{
+	text-align: right;
+}
+.imfw-message.self> *:first-child,
+.imfw-message.other> *:last-child{
+	flex: 1 1 auto;
+
+}
+.imfw-message> *:nth-child(2){
+	flex: 0 0 auto;
+	padding: 8px 10px;
+	background-color: #a0d0f7;
+	margin: 0 10px;
+	border-radius: 10px;
+}
+.imfw-message.self> *:last-child,
+.imfw-message.other> *:first-child{
+	flex: 0 0 auto;
+	width: 30px;
+	height: 30px;
+	border-radius: 30px;
+}
+/** ********** ********** **********
+ * IMFW会话消息样式   --  END  --  *
+ ** ********** ********** **********/

@@ -1,3 +1,12 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+textarea{
+    resize: vertical;
+}
+
 
 .page{
     padding: 0 20px;
@@ -89,11 +98,14 @@
 .table th.sorting_desc{
     background-image: none !important;
 }
-.table .op-btn-view,
-.table .op-btn-edit,
-.table .op-btn-del{
+.table .table-operate> .btn-default,
+.table .table-operate> .btn-primary,
+.table .table-operate> .btn-danger{
     border: none;
     outline: none;
+    font-size: 12px;
+    height: auto;
+    padding: 2px 5px;
 }
 
 
@@ -136,12 +148,18 @@
 .dataTables_wrapper .dataTables_info{
     padding-top: 0 !important;
 }
+
+/* 取消DataTables分页器按钮Hover样式中的边框色 */
+.dataTables_paginate> .pagination> li.paginate_button:hover,
+.dataTables_paginate> .pagination> li.paginate_button.active:hover{
+    border: 1px solid #fff !important;
+}
 /* ---------- DataTables样式覆盖 END ---------- */
 
 
 .form-control, .btn{
     border-radius: 0;
-    height: 34px;
+    height: 30px;
     vertical-align: middle;
     font-size: 12px;
 }

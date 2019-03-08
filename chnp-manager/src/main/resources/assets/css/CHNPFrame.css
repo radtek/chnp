@@ -100,9 +100,14 @@ html, body{
 .view-frame> .view-frame-right> .view-frame-right-tool> .view-frame-right-tabs> *.active{
     background-color: #293846;
     color: #a7b1c2;
+    cursor: default;
 }
-.view-frame> .view-frame-right> .view-frame-right-tool> .view-frame-right-tabs> *.active:hover{
-    color: white;
+.view-frame> .view-frame-right> .view-frame-right-tool> .view-frame-right-tabs> *.active> i{
+    cursor: pointer;
+}
+.view-frame> .view-frame-right> .view-frame-right-tool> .view-frame-right-tabs> *.active:hover,
+.view-frame> .view-frame-right> .view-frame-right-tool> .view-frame-right-tabs> *> i:hover{
+    color: #dfdde3;
 }
 .view-frame> .view-frame-right> .view-frame-right-page{
     flex: 1 1 auto;
