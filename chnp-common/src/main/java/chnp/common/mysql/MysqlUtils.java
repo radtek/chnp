@@ -148,8 +148,8 @@ public class MysqlUtils {
 				map.put(MD_COLUMN_FIELD_NAME, StringUtils.lowerCamelCase(rs.getString("COLUMN_NAME")));// 属性名称：userId
 
 				map.put(MD_COLUMN_REMARKS, rs.getString("REMARKS"));// 字段注解：用户ID
-				map.put(MD_COLUMN_JAVA_TYPE, JavaType.valueOf(rs.getString("TYPE_NAME")));// Java数据类型名称：java.lang.Integer
-				map.put(MD_COLUMN_JDBC_TYPE, JdbcType.valueOf(rs.getString("TYPE_NAME")));// JDBC数据类型名称：INTEGER
+				map.put(MD_COLUMN_JAVA_TYPE, JavaType.valueOf(rs.getString("TYPE_NAME").split(" ")[0]));// Java数据类型名称：java.lang.Integer
+				map.put(MD_COLUMN_JDBC_TYPE, JdbcType.valueOf(rs.getString("TYPE_NAME").split(" ")[0]));// JDBC数据类型名称：INTEGER
 				map.put(MD_COLUMN_SIZE, rs.getInt("COLUMN_SIZE"));// 字段大小
 
 				map.put(MD_COLUMN_TYPE_CODE, rs.getInt("DATA_TYPE"));// 字段类型代码

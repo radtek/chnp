@@ -2,14 +2,21 @@ package chnp.common.mysql.enums;
 
 public enum JavaType {
 
-	INT("java.lang.Integer"),
-	VARCHAR("java.lang.String"),
+	TINYINT("Integer"),
+	INT("Integer"),
+	NUMERIC("Double"),
+	DOUBLE("Double"),
+	DECIMAL("Double"),
+	CHAR("String"),
+	VARCHAR("String"),
+	BIT("Boolean"),
 	TIMESTAMP("java.util.Date"),
 	DATETIME("java.util.Date"),
+	DATE("java.util.Date"),
+	TIME("java.util.Date"),
 	LONGTEXT("java.lang.String"),
+	LONGBLOB("Object"),
 	BIGINT("java.lang.Long"),
-	DECIMAL("java.lang.Double"),
-	DOUBLE("java.lang.Double"),
 	TEXT("java.lang.String"),
 	SMALLINT("java.lang.Integer");
 

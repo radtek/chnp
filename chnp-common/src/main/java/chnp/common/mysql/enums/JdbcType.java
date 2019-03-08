@@ -1,16 +1,22 @@
 package chnp.common.mysql.enums;
 
 public enum JdbcType {
-	
+
+	LONGBLOB("LONGBLOB"),
 	INT("INTEGER"),
 	VARCHAR("VARCHAR"),
-	DATETIME("TIMESTAMP"),
+	BIT("BIT"),
+	TIMESTAMP("TIMESTAMP"),
+	DATETIME("DATETIME"),
+	DATE("DATE"),
+	TIME("TIME"),
 	LONGTEXT("LONGVARCHAR"),
 	BIGINT("BIGINT"),
 	DECIMAL("DOUBLE"),
 	DOUBLE("DOUBLE"),
 	TEXT("VARCAHR"),
-	SMALLINT("INTEGER");
+	SMALLINT("INTEGER"),
+	TINYINT("INTEGER");
 	
 	
 	private String value = "VARCHAR";
