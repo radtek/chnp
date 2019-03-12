@@ -1,98 +1,117 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace必须与接口的全类名一致-->
 <mapper namespace="chnp.manager.mvc.dao.TsConfigDao">
-	<resultMap id="BaseResultMap" type="chnp.manager.mvc.model.domain.TsConfig">
-		<id property="id" column="id" jdbcType="INTEGER"/>
-		<result property="configName" column="config_name" jdbcType="VARCHAR"/>
-		<result property="configKey" column="config_key" jdbcType="VARCHAR"/>
-		<result property="configVal" column="config_val" jdbcType="VARCHAR"/>
-		<result property="configDesc" column="config_desc" jdbcType="VARCHAR"/>
-	</resultMap>
 
-	<sql id="columns">
-		id, config_name, config_key, config_val, config_desc
-	</sql>
+    <!-- 结果映射 -->
+    <resultMap id="tsConfigMapper" type="chnp.manager.mvc.model.domain.TsConfig">
+        <id column="id" property="id" ></id>
+        <result column="config_name" property="configName" ></result>
+        <result column="config_key" property="configKey" ></result>
+        <result column="config_val" property="configVal" ></result>
+        <result column="config_desc" property="configDesc" ></result>
+    </resultMap>
 
-	<sql id="where">
-		<trim prefix="where" suffixOverrides="and">
-			<if test="id != null"><![CDATA[ ts_config.id = #{id, jdbcType=INTEGER} and ]]></if>
-			<if test="configName != null and configName != ''"><![CDATA[ ts_config.config_name = #{configName, jdbcType=VARCHAR} and ]]></if>
-			<if test="configKey != null and configKey != ''"><![CDATA[ ts_config.config_key = #{configKey, jdbcType=VARCHAR} and ]]></if>
-			<if test="configVal != null and configVal != ''"><![CDATA[ ts_config.config_val = #{configVal, jdbcType=VARCHAR} and ]]></if>
-			<if test="configDesc != null and configDesc != ''"><![CDATA[ ts_config.config_desc = #{configDesc, jdbcType=VARCHAR} and ]]></if>
-			<if test="search != null and search != ''">
-				<![CDATA[
-			        (
-						LOWER(ts_config.config_name) like LOWER(concat('%',#{search, jdbcType=VARCHAR},'%')) or
-						LOWER(ts_config.config_key) like LOWER(concat('%',#{search, jdbcType=VARCHAR},'%')) or
-						LOWER(ts_config.config_val) like LOWER(concat('%',#{search, jdbcType=VARCHAR},'%'))
-			        ) and
-			    ]]>
-			</if>
-			<if test="filterCondition != null and filterCondition != ''"><![CDATA[ ${filterCondition} and]]></if>
-		</trim>
-	</sql>
+    <!-- 查询字段 -->
+    <sql id="columns">
+        <trim suffixOverrides=",">
+            id ,config_name ,config_key ,config_val ,config_desc ,
+            <if test="additionalColumns != null and additionalColumns != ''"><![CDATA[ ${ additionalColumns } , ]]></if>
+        </trim>
+    </sql>
 
-	<!-- 操作：插入数据 -->
-	<insert id="save" useGeneratedKeys="true">
-		insert into ts_config
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null">id ,</if>
-			<if test="configName != null and configName != ''">config_name ,</if>
-			<if test="configKey != null and configKey != ''">config_key ,</if>
-			<if test="configVal != null and configVal != ''">config_val ,</if>
-			<if test="configDesc != null and configDesc != ''">config_desc ,</if>
-		</trim>
-		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
-			<if test="id != null">#{ id } ,</if>
-			<if test="configName != null and configName != ''">#{ configName } ,</if>
-			<if test="configKey != null and configKey != ''">#{ configKey } ,</if>
-			<if test="configVal != null and configVal != ''">#{ configVal } ,</if>
-			<if test="configDesc != null and configDesc != ''">#{ configDesc } ,</if>
-		</trim>
-	</insert>
+    <!-- 关联表 -->
+    <sql id="from">
+        <trim suffixOverrides=",">
+            from ts_config ,
+        </trim>
+        <if test="additionalTables != null and additionalTables != ''"><![CDATA[ ${ additionalTables } ]]></if>
+    </sql>
 
-	<delete id="deleteByCondition">
-		delete tc from ts_config tc
-		<include refid="where"/>
-	</delete>
-	
-	<select id="getByCondition" resultMap="BaseResultMap">
-		select <include refid="columns"/>
-		from ts_config
-		<include refid="where"/>
-	</select>
+    <!-- 过滤条件 -->
+    <sql id="where">
+        <trim prefix="where" suffixOverrides="and">
+        	<![CDATA[ 1=1 and ]]>
+            <if test="id != null"><![CDATA[ ts_config.id = #{ id } and ]]></if>
+            <if test="configName != null"><![CDATA[ ts_config.config_name = #{ configName } and ]]></if>
+            <if test="configKey != null"><![CDATA[ ts_config.config_key = #{ configKey } and ]]></if>
+            <if test="configVal != null"><![CDATA[ ts_config.config_val = #{ configVal } and ]]></if>
+            <if test="configDesc != null"><![CDATA[ ts_config.config_desc = #{ configDesc } and ]]></if>
+            <if test="search != null and search != ''">
+                <![CDATA[
+                    (
+                        lower(ts_config.config_name) like lower(concat('%',#{ search, jdbcType=VARCHAR,'%')) or
+                        lower(ts_config.config_key) like lower(concat('%',#{ search, jdbcType=VARCHAR,'%')) or
+                        lower(ts_config.config_val) like lower(concat('%',#{ search, jdbcType=VARCHAR,'%')) or
+                        lower(ts_config.config_desc) like lower(concat('%',#{ search, jdbcType=VARCHAR,'%'))
+                    ) and
+                ]]>
+            </if>
+            <if test="additionalFilters != null and additionalFilters != ''"><![CDATA[ ${ additionalFilters } and ]]></if>
+            <if test="additionalConstrains != null and additionalConstrains != ''"><![CDATA[ ${ additionalConstrains } ]]></if>
+        </trim>
+        <if test="start != null and length != null "><![CDATA[ limit #{ start },#{ length } ]]></if>
+    </sql>
 
-	<select id="findByCondition" resultMap="BaseResultMap">
-		select <include refid="columns"/>
-		from ts_config
-		<include refid="where"/>
-	</select>
+    <!-- 操作：插入数据 -->
+    <insert id="save" useGeneratedKeys="true">
+        insert into ts_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id ,</if>
+            <if test="configName != null and configName != ''">config_name ,</if>
+            <if test="configKey != null and configKey != ''">config_key ,</if>
+            <if test="configVal != null and configVal != ''">config_val ,</if>
+            <if test="configDesc != null and configDesc != ''">config_desc ,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{ id } ,</if>
+            <if test="configName != null and configName != ''">#{ configName } ,</if>
+            <if test="configKey != null and configKey != ''">#{ configKey } ,</if>
+            <if test="configVal != null and configVal != ''">#{ configVal } ,</if>
+            <if test="configDesc != null and configDesc != ''">#{ configDesc } ,</if>
+        </trim>
+    </insert>
 
-	<select id="findPage" resultMap="BaseResultMap">
-		select <include refid="columns"/>
-		from ts_config
-		<include refid="where"/>
-		limit #{start}, #{length}
-	</select>
+    <!-- 操作：根据条件删除 -->
+    <delete id="deleteByCondition">
+        delete ts_config
+		<include refid="from"/>
+        <include refid="where"/>
+    </delete>
 
-	<select id="countByCondition" resultType="java.lang.Long">
-		select count(*)
-		from ts_config
-		<include refid="where"/>
-	</select>
+    <!-- 操作：根据条件获取数据 -->
+    <select id="getByCondition" resultMap="tsConfigMapper" useCache="false">
+        select <include refid="columns"/>
+        <include refid="from"/>
+        <include refid="where"/>
+        limit 1
+    </select>
 
-	<!-- 操作：根据主键更新数据 -->
-	<update id="updateById">
-		update ts_config
-		<trim prefix="set" suffixOverrides=",">
-			<if test="configName != null">config_name = #{ configName } ,</if>
-			<if test="configKey != null">config_key = #{ configKey } ,</if>
-			<if test="configVal != null">config_val = #{ configVal } ,</if>
-			<if test="configDesc != null">config_desc = #{ configDesc } ,</if>
-		</trim>
-		<trim prefix="where">
-			id = #{ id }
-		</trim>
-	</update>
+    <!-- 操作：根据条件查询数据 -->
+    <select id="findByCondition" resultMap="tsConfigMapper" useCache="false">
+        select <include refid="columns"/>
+		<include refid="from"/>
+        <include refid="where"/>
+    </select>
+
+    <!-- 操作：根据条件统计数据 -->
+    <select id="countByCondition" resultType="java.lang.Long" useCache="false">
+        select count(*)
+		<include refid="from"/>
+        <include refid="where"/>
+    </select>
+
+    <!-- 操作：根据主键更新数据 -->
+    <update id="updateById">
+        update ts_config
+        <trim prefix="set" suffixOverrides=",">
+            <if test="configName != null">config_name = #{ configName } ,</if>
+            <if test="configKey != null">config_key = #{ configKey } ,</if>
+            <if test="configVal != null">config_val = #{ configVal } ,</if>
+            <if test="configDesc != null">config_desc = #{ configDesc } ,</if>
+        </trim>
+        <trim prefix="where">
+            id = #{ id }
+        </trim>
+    </update>
 </mapper>

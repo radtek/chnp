@@ -1,4 +1,4 @@
-package chnp.manager.shiro.realm;
+package chnp.manager.config.shiro.realm;
 
 import chnp.common.utils.StringUtils;
 import chnp.manager.common.service.UtilService;

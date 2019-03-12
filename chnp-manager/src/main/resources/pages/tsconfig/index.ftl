@@ -81,9 +81,9 @@
                         "data": "id",
                         "className": "table-operate",
                         "render": function (data, type, full, meta) {
-                            return '&nbsp;<button class="op-btn-view" type="button" data-url="/tsconfig/view?id=' + data + '" onclick="modal($(this))"><i class="fa fa-eye"></i>查看</button>' +
-                                    '&nbsp;<button class="btn-primary op-btn-edit" type="button" data-url="/tsconfig/edit?id=' + data + '" onclick="modal($(this))"><i class="fa fa-edit"></i>编辑</button>' +
-                                    '&nbsp;<button class="btn-danger op-btn-del" type="button" data-url="/tsconfig/del?ids=' + data + '" onclick=""><i class="fa fa-trash"></i>删除</button>';
+                            return '&nbsp;<button class="btn btn-default" type="button" data-url="/tsconfig/view?id=' + data + '" onclick="modal($(this))"><i class="fa fa-eye"></i>查看</button>' +
+                                    '&nbsp;<button class="btn btn-primary" type="button" data-url="/tsconfig/edit?id=' + data + '" onclick="modal($(this))"><i class="fa fa-edit"></i>编辑</button>' +
+                                    '&nbsp;<button class="btn btn-danger" type="button" data-url="/tsconfig/del?ids=' + data + '" onclick=""><i class="fa fa-trash"></i>删除</button>';
                         }
                     },
                     dataTable: {

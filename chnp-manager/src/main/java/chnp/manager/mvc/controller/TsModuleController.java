@@ -3,6 +3,7 @@ package chnp.manager.mvc.controller;
 import chnp.manager.common.entity.ResponseJson;
 import chnp.manager.mvc.model.domain.TsModule;
 import chnp.manager.mvc.model.query.TsModuleQuery;
+import chnp.manager.mvc.service.TsDataService;
 import chnp.manager.mvc.service.TsModuleService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
@@ -22,6 +23,8 @@ import java.util.List;
 public class TsModuleController {
 	private final Logger log = LoggerFactory.getLogger(getClass());
 
+	@Autowired
+	private TsDataService tsDataService;
 	@Autowired
 	private TsModuleService tsModuleService;
 
@@ -45,7 +48,30 @@ public class TsModuleController {
 	@RequestMapping("/new")
 	public String _new(Model model, TsModule tsModule) {
 		model.addAttribute("tsModule", tsModule);
+
+		TsModuleQuery tsModuleQuery = new TsModuleQuery();
+		model.addAttribute("parentTree", tsModuleService.getSelectTree(tsModuleQuery));
+
+		model.addAttribute("moduleTypes", tsDataService.findValuesByKey("tsModuleType"));
 		return "tsmodule/new";
+	}
+
+	/**<p>保存数据</p>
+	 *
+	 * @param tsModule 保存对象
+	 * @return 操作结果
+	 */
+	@RequiresPermissions(value = {"tsmodule_save"})
+	@ResponseBody
+	@RequestMapping("/save")
+	public ResponseJson save(TsModule tsModule) {
+		ResponseJson responseJson = new ResponseJson();
+
+		if (tsModuleService.save(tsModule) > 0) {
+			responseJson.success("更新成功！");
+		}else responseJson.error("更新失败！");
+
+		return responseJson;
 	}
 
 	/**<p>编辑界面</p>
@@ -60,7 +86,31 @@ public class TsModuleController {
 		TsModule tsModule = tsModuleService.getById(id);
 		if (null == tsModule) tsModule = new TsModule();
 		model.addAttribute("tsModule", tsModule);
+
+		TsModuleQuery tsModuleQuery = new TsModuleQuery();
+		model.addAttribute("parentTree", tsModuleService.getSelectTree(tsModuleQuery));
+
+		model.addAttribute("moduleTypes", tsDataService.findValuesByKey("tsModuleType"));
 		return "tsmodule/edit";
+	}
+
+	/**<p>更新数据</p>
+	 *
+	 * @param tsModule 更新对象
+	 * @return 操作结果
+	 */
+	@RequiresPermissions(value = {"tsmodule_update"})
+	@ResponseBody
+	@RequestMapping("/update")
+	public ResponseJson update(TsModule tsModule) {
+		ResponseJson responseJson = new ResponseJson();
+
+		if (tsModule.getId() == null) responseJson.error("未指定更新对象！");
+		else if (tsModuleService.update(tsModule) > 0) {
+			responseJson.success("更新成功！");
+		}else responseJson.error("更新失败！");
+
+		return responseJson;
 	}
 
 	/**<p>删除</p>
@@ -78,7 +128,7 @@ public class TsModuleController {
 		String[] idList = ids.split(",");
 		for (String sId : idList) {
 			try {
-				tsModuleService.deleteById(Integer.valueOf(sId));
+				tsModuleService.deepdelete(Integer.valueOf(sId));
 			}catch (Exception e) {
 				log.error("ID为" + sId + "的菜单删除失败", e);
 				fails.add(sId);
@@ -107,7 +157,7 @@ public class TsModuleController {
 	@ResponseBody
 	@RequestMapping("/data")
 	public List<TsModule> data(TsModuleQuery tsModuleQuery) {
-		tsModuleQuery.setOrderCondition("parent_id, sort");
+		tsModuleQuery.setAdditionalConstrains("order by parent_id, sort");
 		return tsModuleService.findAllByCondition(tsModuleQuery);
 	}
 

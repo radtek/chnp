@@ -47,6 +47,10 @@ $('form').on('submit', function(e) {
     else $('#' + btnCommit).click();
 });
 
+
+
+
+
 /**<p>请求并显示模态框</p>
  * <p>
  *     注意：该方法依赖Bootstrap或Modal。

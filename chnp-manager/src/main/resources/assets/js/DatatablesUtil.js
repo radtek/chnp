@@ -18,17 +18,7 @@ var DatatablesUtil = function() {
             serverSide: true,
             ajax: {
                 "url": "",
-                "type": "POST",
-                "data": function(d) {
-                    var nd = [];
-                    nd.push({name:"search", value:d.search.value});
-                    nd.push({name:"draw", value:d.draw});
-                    nd.push({name:"pageNo", value:d.start / d.length + 1});
-                    nd.push({name:"length", value:d.length});
-                    //nd.push({name:"order", value:d.order});
-                    $.extend(nd, additionalParams);
-                    return nd;
-                }
+                "type": "POST"
             },
             language: {
                 "processing": "处理中...",
@@ -83,6 +73,18 @@ var DatatablesUtil = function() {
                 });
             }
             defaultOptions.dataTable.ajax.url = defaultOptions.serverUrl;
+            defaultOptions.dataTable.ajax.data = function(d) {
+                var nd = [];
+                nd.push({name:"search", value:d.search.value});
+                nd.push({name:"draw", value:d.draw});
+                nd.push({name:"pageNo", value:d.start / d.length + 1});
+                nd.push({name:"length", value:d.length});
+                if (defaultOptions.filter instanceof Function) {
+                    $.extend(nd, defaultOptions.filter());
+                }
+                $.extend(nd, additionalParams);
+                return nd;
+            };
 
             defaultOptions.dataTable.columns = (function() {
                 var cols = [];

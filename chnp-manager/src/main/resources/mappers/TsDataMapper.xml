@@ -1,0 +1,130 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace必须与接口的全类名一致-->
+<mapper namespace="chnp.manager.mvc.dao.TsDataDao">
+
+    <!-- 结果映射 -->
+    <resultMap id="tsDataMapper" type="chnp.manager.mvc.model.domain.TsData">
+        <id column="id" property="id" />
+        <result column="data_key" property="dataKey" />
+        <result column="data_name" property="dataName" />
+        <result column="data_desc" property="dataDesc" />
+    </resultMap>
+
+    <resultMap id="tsDataItemMapper" type="chnp.manager.mvc.model.domain.TsDataItem">
+        <id column="id" property="id" />
+        <result column="item_key" property="itemKey" />
+        <result column="item_value" property="itemValue" />
+        <result column="item_desc" property="itemDesc" />
+        <result column="item_sort" property="itemSort" />
+        <result column="data_id" property="dataId" />
+    </resultMap>
+
+    <!-- 查询字段 -->
+    <sql id="columns">
+        <trim suffixOverrides=",">
+            id ,data_key ,data_name ,data_desc ,
+            <if test="additionalColumns != null and additionalColumns != ''"><![CDATA[ ${ additionalColumns } , ]]></if>
+        </trim>
+    </sql>
+
+    <!-- 关联表 -->
+    <sql id="from">
+        <trim suffixOverrides=",">
+            from ts_data ,
+        </trim>
+        <if test="additionalTables != null and additionalTables != ''"><![CDATA[ ${ additionalTables } ]]></if>
+    </sql>
+
+    <!-- 过滤条件 -->
+    <sql id="where">
+        <trim prefix="where" suffixOverrides="and">
+        	<![CDATA[ 1=1 and ]]>
+            <if test="id != null"><![CDATA[ ts_data.id = #{ id } and ]]></if>
+            <if test="dataKey != null"><![CDATA[ ts_data.data_key = #{ dataKey } and ]]></if>
+            <if test="dataName != null"><![CDATA[ ts_data.data_name = #{ dataName } and ]]></if>
+            <if test="dataDesc != null"><![CDATA[ ts_data.data_desc = #{ dataDesc } and ]]></if>
+            <if test="search != null and search != ''">
+                <![CDATA[
+			        (
+						lower(ts_data.data_key) like lower(concat('%',#{ search, jdbcType=VARCHAR},'%')) or
+						lower(ts_data.data_name) like lower(concat('%',#{ search, jdbcType=VARCHAR},'%'))
+					) and
+			    ]]>
+            </if>
+            <if test="additionalFilters != null and additionalFilters != ''"><![CDATA[ ${ additionalFilters } and ]]></if>
+        </trim>
+        <if test="additionalConstrains != null and additionalConstrains != ''"><![CDATA[ ${ additionalConstrains } ]]></if>
+    </sql>
+
+
+
+    <!-- 操作：插入数据 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into ts_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id ,</if>
+            <if test="dataKey != null">data_key ,</if>
+            <if test="dataName != null">data_name ,</if>
+            <if test="dataDesc != null">data_desc ,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{ id } ,</if>
+            <if test="dataKey != null">#{ dataKey } ,</if>
+            <if test="dataName != null">#{ dataName } ,</if>
+            <if test="dataDesc != null">#{ dataDesc } ,</if>
+        </trim>
+    </insert>
+
+    <!-- 操作：根据条件删除 -->
+    <delete id="delete">
+        delete ts_data
+	    <include refid="from" />
+        <include refid="where" />
+    </delete>
+
+	<select id="findItemsByKey" resultMap="tsDataItemMapper" useCache="false">
+		select di.*
+		from (
+			select id
+			from ts_data
+			where data_key = #{ data_key }
+		) d
+		left join ts_data_item di on di.data_id=d.id
+	</select>
+
+    <!-- 操作：根据条件获取数据 -->
+    <select id="getByCondition" resultMap="tsDataMapper" useCache="false">
+        select <include refid="columns"/>
+	    <include refid="from"/>
+        <include refid="where"/>
+        limit 1
+    </select>
+
+    <!-- 操作：根据条件查询数据 -->
+    <select id="findByCondition" resultMap="tsDataMapper" useCache="false">
+        select <include refid="columns"/>
+        <include refid="from"/>
+        <include refid="where"/>
+	</select>
+
+    <!-- 操作：根据条件统计数据 -->
+    <select id="countByCondition" resultType="long" useCache="false">
+        select count(*)
+	    <include refid="from"/>
+        <include refid="where"/>
+	</select>
+
+    <!-- 操作：根据主键更新数据 -->
+    <update id="update">
+        update ts_data
+        <trim prefix="set" suffixOverrides=",">
+            <if test="dataKey != null">data_key = #{ dataKey } ,</if>
+            <if test="dataName != null">data_name = #{ dataName } ,</if>
+            <if test="dataDesc != null">data_desc = #{ dataDesc } ,</if>
+        </trim>
+        <trim prefix="where">
+            id = #{ id }
+        </trim>
+    </update>
+</mapper>

@@ -1,0 +1,102 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace必须与接口的全类名一致-->
+<mapper namespace="chnp.manager.mvc.dao.TsUserRoleDao">
+
+    <!-- 结果映射 -->
+    <resultMap id="tsUserRoleMapper" type="chnp.manager.mvc.model.domain.TsUserRole">
+        <id column="id" property="id"></id>
+        <result column="user_id" property="userId"></result>
+        <result column="role_id" property="roleId"></result>
+    </resultMap>
+
+    <!-- 查询字段 -->
+    <sql id="columns">
+        <trim suffixOverrides=",">
+            id ,user_id ,role_id ,
+            <if test="additionalColumns != null and additionalColumns != ''"><![CDATA[ ${ additionalColumns } , ]]></if>
+        </trim>
+    </sql>
+
+    <!-- 关联表 -->
+    <sql id="from">
+        <trim suffixOverrides=",">
+            from ts_user_role ,
+        </trim>
+        <if test="additionalTables != null and additionalTables != ''"><![CDATA[ ${ additionalTables } ]]></if>
+    </sql>
+
+    <!-- 过滤条件 -->
+    <sql id="where">
+        <trim prefix="where" suffixOverrides="and">
+        	<![CDATA[ 1=1 and ]]>
+            <if test="id != null"><![CDATA[ ts_user_role.id = #{ id } and ]]></if>
+            <if test="userId != null"><![CDATA[ ts_user_role.user_id = #{ userId } and ]]></if>
+            <if test="roleId != null"><![CDATA[ ts_user_role.role_id = #{ roleId } and ]]></if>
+            <if test="search != null and search != ''">
+                <![CDATA[
+                    (
+                    ) and
+                ]]>
+            </if>
+            <if test="additionalFilters != null and additionalFilters != ''"><![CDATA[ ${ additionalFilters } and ]]></if>
+        </trim>
+        <if test="additionalConstrains != null and additionalConstrains != ''"><![CDATA[ ${ additionalConstrains } ]]></if>
+    </sql>
+
+    <!-- 操作：插入数据 -->
+    <insert id="insert" useGeneratedKeys="true">
+        insert into ts_user_role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id ,</if>
+            <if test="userId != null">user_id ,</if>
+            <if test="roleId != null">role_id ,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{ id } ,</if>
+            <if test="userId != null">#{ userId } ,</if>
+            <if test="roleId != null">#{ roleId } ,</if>
+        </trim>
+    </insert>
+
+    <!-- 操作：根据条件删除 -->
+    <delete id="delete">
+        delete ts_user_role
+        <include refid="from"></include>
+        <include refid="where"></include>
+    </delete>
+
+    <!-- 操作：根据条件获取数据 -->
+    <select id="getByCondition" resultMap="tsUserRoleMapper" useCache="false">
+        select <include refid="columns"></include>
+        <include refid="from"></include>
+        <include refid="where"></include>
+        limit 1
+    </select>
+
+    <!-- 操作：根据条件查询数据 -->
+    <select id="findByCondition" resultMap="tsUserRoleMapper" useCache="false">
+        select <include refid="columns"></include>
+        <include refid="from"></include>
+        <include refid="where"></include>
+    </select>
+
+    <!-- 操作：根据条件统计数据 -->
+    <select id="countByCondition" resultType="java.lang.Long" useCache="false">
+        select count(*)
+        <include refid="from"></include>
+        <include refid="where"></include>
+    </select>
+
+    <!-- 操作：根据主键更新数据 -->
+    <update id="update">
+        update ts_user_role
+        <trim prefix="set" suffixOverrides=",">
+            <if test="userId != null">user_id = #{ userId } ,</if>
+            <if test="roleId != null">role_id = #{ roleId } ,</if>
+        </trim>
+        <trim prefix="where">
+            id = #{ id }
+        </trim>
+    </update>
+</mapper>

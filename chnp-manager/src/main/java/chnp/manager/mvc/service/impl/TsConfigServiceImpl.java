@@ -53,12 +53,13 @@ public class TsConfigServiceImpl implements TsConfigService {
 	public DataTables findPage(TsConfigQuery query) {
 		DataTables dataTables = new DataTables();
 
-		List<TsConfig> tsConfigs = tsConfigDao.findPage(query);
+		List<TsConfig> tsConfigs = tsConfigDao.findByCondition(query);
 		if (null == tsConfigs) tsConfigs = new ArrayList<>();
 		dataTables.setData(tsConfigs);
-		dataTables.setRecordsFiltered(tsConfigs.size());
 
-		dataTables.setRecordsTotal(tsConfigDao.countByCondition(query));
+		Long total = tsConfigDao.countByCondition(query);
+		dataTables.setRecordsFiltered(total);
+		dataTables.setRecordsTotal(total);
 
 		return dataTables;
 	}

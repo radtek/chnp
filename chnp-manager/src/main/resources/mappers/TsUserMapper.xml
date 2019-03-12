@@ -1,59 +1,122 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace必须与接口的全类名一致-->
 <mapper namespace="chnp.manager.mvc.dao.TsUserDao">
-	<resultMap id="BaseResultMap" type="chnp.manager.mvc.model.domain.TsUser">
-		<id property="id" column="id" jdbcType="INTEGER"/>
-		<result property="userName" column="user_name" jdbcType="VARCHAR"/>
-		<result property="userPswd" column="user_pswd" jdbcType="VARCHAR"/>
-	</resultMap>
 
-	<sql id="columns">
-		id, user_name, user_pswd
-	</sql>
+    <!-- 结果映射 -->
+    <resultMap id="tsUserMapper" type="chnp.manager.mvc.model.domain.TsUser">
+        <id column="id" property="id"></id>
+        <result column="user_name" property="userName"></result>
+        <result column="user_pswd" property="userPswd"></result>
+        <result column="register_time" property="registerTime"></result>
+        <result column="user_nick" property="userNick"></result>
+        <result column="link_email" property="linkEmail"></result>
+    </resultMap>
 
-	<sql id="where">
-		<trim prefix="where" suffixOverrides="and">
-			<if test="id != null"><![CDATA[ ts_user.id = #{id, jdbcType=INTEGER} and ]]></if>
-			<if test="userName != null and userName != ''"><![CDATA[ ts_user.user_name = #{userName, jdbcType=VARCHAR} and ]]></if>
-			<if test="userPswd != null and userPswd != ''"><![CDATA[ ts_user.user_pswd = #{userPswd, jdbcType=VARCHAR} and ]]></if>
-			<if test="search != null and search != ''">
-				<![CDATA[
-			        (
-						LOWER(ts_user.user_name) like LOWER(concat('%',#{search, jdbcType=VARCHAR},'%'))
-			        ) and
-			    ]]>
-			</if>
-			<if test="filterCondition != null and filterCondition != ''"><![CDATA[ ${filterCondition} and]]></if>
-		</trim>
-	</sql>
-	
-	<select id="getByCondition" resultMap="BaseResultMap">
-		select <include refid="columns"/>
-		from ts_user
-		<include refid="where"/>
-	</select>
+    <!-- 查询字段 -->
+    <sql id="columns">
+        <trim suffixOverrides=",">
+            id ,user_name ,user_pswd ,register_time ,user_nick ,link_email ,
+            <if test="additionalColumns != null and additionalColumns != ''"><![CDATA[ ${ additionalColumns } , ]]></if>
+        </trim>
+    </sql>
 
-	<select id="findByCondition" resultMap="BaseResultMap">
-		select <include refid="columns"/>
-		from ts_user
-		<include refid="where"/>
-	</select>
+    <!-- 关联表 -->
+    <sql id="from">
+        <trim suffixOverrides=",">
+            from ts_user ,
+        </trim>
+        <if test="additionalTables != null and additionalTables != ''"><![CDATA[ ${ additionalTables } ]]></if>
+    </sql>
 
-	<select id="findPage" resultMap="BaseResultMap">
-		select <include refid="columns"/>
-		from ts_user
-		<include refid="where"/>
-		limit #{start}, #{length}
-	</select>
+    <!-- 过滤条件 -->
+    <sql id="where">
+        <trim prefix="where" suffixOverrides="and">
+        	<![CDATA[ 1=1 and ]]>
+            <if test="id != null"><![CDATA[ ts_user.id = #{ id } and ]]></if>
+            <if test="userName != null"><![CDATA[ ts_user.user_name = #{ userName } and ]]></if>
+            <if test="userPswd != null"><![CDATA[ ts_user.user_pswd = #{ userPswd } and ]]></if>
+            <if test="registerTimeBegin != null"><![CDATA[ ts_user.register_time >= #{ registerTimeBegin } and ]]></if>
+            <if test="registerTimeEnd != null"><![CDATA[ ts_user.register_time < #{ registerTimeEnd } and ]]></if>
+            <if test="userNick != null"><![CDATA[ ts_user.user_nick = #{ userNick } and ]]></if>
+            <if test="linkEmail != null"><![CDATA[ ts_user.link_email = #{ linkEmail } and ]]></if>
+            <if test="search != null and search != ''">
+                <![CDATA[
+                    (
+                        lower(ts_user.user_name) like lower(concat('%',#{ search, jdbcType=VARCHAR},'%')) or
+                        lower(ts_user.user_pswd) like lower(concat('%',#{ search, jdbcType=VARCHAR},'%')) or
+                        lower(ts_user.user_nick) like lower(concat('%',#{ search, jdbcType=VARCHAR},'%')) or
+                        lower(ts_user.link_email) like lower(concat('%',#{ search, jdbcType=VARCHAR},'%'))
+                    ) and
+                ]]>
+            </if>
+            <if test="additionalFilters != null and additionalFilters != ''"><![CDATA[ ${ additionalFilters } and ]]></if>
+        </trim>
+        <if test="additionalConstrains != null and additionalConstrains != ''"><![CDATA[ ${ additionalConstrains } ]]></if>
+    </sql>
 
-	<select id="countByCondition" resultType="java.lang.Integer">
-		select count(*)
-		from ts_user
-		<include refid="where"/>
-	</select>
+    <!-- 操作：插入数据 -->
+    <insert id="insert" useGeneratedKeys="true">
+        insert into ts_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id ,</if>
+            <if test="userName != null">user_name ,</if>
+            <if test="userPswd != null">user_pswd ,</if>
+            <if test="registerTime != null">register_time ,</if>
+            <if test="userNick != null">user_nick ,</if>
+            <if test="linkEmail != null">link_email ,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{ id } ,</if>
+            <if test="userName != null">#{ userName } ,</if>
+            <if test="userPswd != null">#{ userPswd } ,</if>
+            <if test="registerTime != null">#{ registerTime } ,</if>
+            <if test="userNick != null">#{ userNick } ,</if>
+            <if test="linkEmail != null">#{ linkEmail } ,</if>
+        </trim>
+    </insert>
 
-	<delete id="deleteByCondition">
-		delete tm from ts_user tu
-		<include refid="where"/>
-	</delete>
+    <!-- 操作：根据条件删除 -->
+    <delete id="delete">
+        delete ts_user
+        <include refid="from"></include>
+        <include refid="where"></include>
+    </delete>
+
+    <!-- 操作：根据条件获取数据 -->
+    <select id="getByCondition" resultMap="tsUserMapper" useCache="false">
+        select <include refid="columns"></include>
+        <include refid="from"></include>
+        <include refid="where"></include>
+        limit 1
+    </select>
+
+    <!-- 操作：根据条件查询数据 -->
+    <select id="findByCondition" resultMap="tsUserMapper" useCache="false">
+        select <include refid="columns"></include>
+        <include refid="from"></include>
+        <include refid="where"></include>
+    </select>
+
+    <!-- 操作：根据条件统计数据 -->
+    <select id="countByCondition" resultType="java.lang.Long" useCache="false">
+        select count(*)
+        <include refid="from"></include>
+        <include refid="where"></include>
+    </select>
+
+    <!-- 操作：根据主键更新数据 -->
+    <update id="update">
+        update ts_user
+        <trim prefix="set" suffixOverrides=",">
+            <if test="userName != null">user_name = #{ userName } ,</if>
+            <if test="userPswd != null">user_pswd = #{ userPswd } ,</if>
+            <if test="registerTime != null">register_time = #{ registerTime } ,</if>
+            <if test="userNick != null">user_nick = #{ userNick } ,</if>
+            <if test="linkEmail != null">link_email = #{ linkEmail } ,</if>
+        </trim>
+        <trim prefix="where">
+            id = #{ id }
+        </trim>
+    </update>
 </mapper>

@@ -22,10 +22,11 @@
                             <div class="form-group">
                                 <input name="search" class="form-control" placeholder="输入用户名">
                             </div>
-                            <button class="btn btn-primary" type="button" onclick="searching()"><i class="fa fa-search"></i>搜索</button>
+                            <button class="btn btn-primary" type="button" onclick="tsuser.searching()"><i class="fa fa-search"></i>搜索</button>
                         </form>
                     </div>
                     <div class="table-search-right">
+                        <button class="btn btn-primary" type="button" data-url="/tsuser/new" onclick="modal($(this))"><i class="fa fa-plus"></i>新增</button>
                     </div>
                 </div>
                 <div>
@@ -33,7 +34,9 @@
                         <thead>
                             <tr>
                                 <th class="table-check"><input type="checkbox" /></th>
-                                <th>用户名</th>
+                                <th>登陆账号</th>
+                                <th>用户昵称</th>
+                                <th>常用邮箱</th>
                                 <th>注册时间</th>
                                 <th class="table-operate">操作</th>
                             </tr>
@@ -61,13 +64,16 @@
             var tsuser = {};
             var params = [];
 
-            function searching() {
+            tsuser.getFilter = function() {
+                return $("#tsuser_search_form").serializeArray();
+            };
+
+            tsuser.searching = function() {
                 // 重置Table中Checkbox的状态
                 $("table.table input[type=checkbox]").prop({checked: false});
 
-                params = $("#tsuser_search_form").serializeArray();
-                datatables.ajax.reload();
-            }
+                tsuser.dataTablesUtil.searching(tsuser.getFilter());
+            };
 
             $(function() {
 
@@ -75,16 +81,17 @@
                 tsuser.dataTablesUtil.init({
                     container: "#tTsUser",
                     serverUrl: "/tsuser/page",
-                    columnNames: ["userName", "userPswd"],
+                    columnNames: ["userName", "userNick", "linkEmail", "registerTimeString"],
                     operate: {
                         "data": "id",
                         "className": "table-operate",
                         "render": function (data, type, full, meta) {
-                            return '&nbsp;<button class="op-btn-view" type="button" data-url="/tsuser/view?id=' + data + '" onclick="modal($(this))"><i class="fa fa-eye"></i>查看</button>' +
-                                    '&nbsp;<button class="op-btn-edit" type="button" data-url="/tsuser/edit?id=' + data + '" onclick="modal($(this))"><i class="fa fa-edit"></i>编辑</button>' +
-                                    '&nbsp;<button class="op-btn-del" type="button" data-url="/tsuser/del?ids=' + data + '" onclick=""><i class="fa fa-trash"></i>删除</button>';
+                            return '&nbsp;<button class="btn btn-default" type="button" data-url="/tsuser/view?id=' + data + '" onclick="modal($(this))"><i class="fa fa-eye"></i>查看</button>' +
+                                    '&nbsp;<button class="btn btn-primary" type="button" data-url="/tsuser/edit?id=' + data + '" onclick="modal($(this))"><i class="fa fa-edit"></i>编辑</button>' +
+                                    '&nbsp;<button class="btn btn-danger" type="button" data-url="/tsuser/del?ids=' + data + '" onclick="tsuser.del($(this))"><i class="fa fa-trash"></i>删除</button>';
                         }
                     },
+                    filter: tsuser.getFilter,
                     dataTable: {
                         order: [
                             [1, "desc"]
@@ -98,6 +105,44 @@
                     }
                 });
             });
+
+
+
+            tsuser.del = function(obj) {
+                var url = obj.data('url');
+
+                bootbox.confirm({
+                    message: '确定要<strong style="color: red;">删除</strong>选中的记录吗？',
+                    buttons: {
+                        confirm: {
+                            label: '<i class="fa fa-fw fa-trash"></i>删除',
+                            className: 'btn btn-danger'
+                        },
+                        cancel: {
+                            label: '取消'
+                        }
+                    },
+                    callback: function(result) {
+                        if (result) {
+                            $.ajax({
+                                type: "post",
+                                url: url,
+                                dataType: "json",
+                                success: function(data) {
+                                    if (1 === data.returnCode) {
+                                        tsuser.searching();
+                                    }else {
+                                        bootbox.alert(data.msg);
+                                    }
+                                },
+                                error: function() {
+                                    bootbox.alert("请求失败");
+                                }
+                            })
+                        }
+                    }
+                });
+            };
         </script>
     </body>
 </html>

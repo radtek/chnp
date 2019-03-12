@@ -1,0 +1,108 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace必须与接口的全类名一致-->
+<mapper namespace="chnp.manager.mvc.dao.TsRoleDao">
+
+    <!-- 结果映射 -->
+    <resultMap id="tsRoleMapper" type="chnp.manager.mvc.model.domain.TsRole">
+        <id column="id" property="id"></id>
+        <result column="name" property="name"></result>
+        <result column="org_id" property="orgId"></result>
+        <result column="status" property="status"></result>
+    </resultMap>
+
+    <!-- 查询字段 -->
+    <sql id="columns">
+        <trim suffixOverrides=",">
+            id ,name ,org_id ,status ,
+            <if test="additionalColumns != null and additionalColumns != ''"><![CDATA[ ${ additionalColumns } , ]]></if>
+        </trim>
+    </sql>
+
+    <!-- 关联表 -->
+    <sql id="from">
+        <trim suffixOverrides=",">
+            from ts_role ,
+        </trim>
+        <if test="additionalTables != null and additionalTables != ''"><![CDATA[ ${ additionalTables } ]]></if>
+    </sql>
+
+    <!-- 过滤条件 -->
+    <sql id="where">
+        <trim prefix="where" suffixOverrides="and">
+        	<![CDATA[ 1=1 and ]]>
+            <if test="id != null"><![CDATA[ ts_role.id = #{ id } and ]]></if>
+            <if test="name != null"><![CDATA[ ts_role.name = #{ name } and ]]></if>
+            <if test="orgId != null"><![CDATA[ ts_role.org_id = #{ orgId } and ]]></if>
+            <if test="status != null"><![CDATA[ ts_role.status = #{ status } and ]]></if>
+            <if test="search != null and search != ''">
+                <![CDATA[
+                    (
+                        lower(ts_role.name) like lower(concat('%',#{ search, jdbcType=VARCHAR},'%')) or
+                    ) and
+                ]]>
+            </if>
+            <if test="additionalFilters != null and additionalFilters != ''"><![CDATA[ ${ additionalFilters } and ]]></if>
+        </trim>
+        <if test="additionalConstrains != null and additionalConstrains != ''"><![CDATA[ ${ additionalConstrains } ]]></if>
+    </sql>
+
+    <!-- 操作：插入数据 -->
+    <insert id="insert" useGeneratedKeys="true">
+        insert into ts_role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id ,</if>
+            <if test="name != null">name ,</if>
+            <if test="orgId != null">org_id ,</if>
+            <if test="status != null">status ,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{ id } ,</if>
+            <if test="name != null">#{ name } ,</if>
+            <if test="orgId != null">#{ orgId } ,</if>
+            <if test="status != null">#{ status } ,</if>
+        </trim>
+    </insert>
+
+    <!-- 操作：根据条件删除 -->
+    <delete id="delete">
+        delete ts_role
+        <include refid="from"></include>
+        <include refid="where"></include>
+    </delete>
+
+    <!-- 操作：根据条件获取数据 -->
+    <select id="getByCondition" resultMap="tsRoleMapper" useCache="false">
+        select <include refid="columns"></include>
+        <include refid="from"></include>
+        <include refid="where"></include>
+        limit 1
+    </select>
+
+    <!-- 操作：根据条件查询数据 -->
+    <select id="findByCondition" resultMap="tsRoleMapper" useCache="false">
+        select <include refid="columns"></include>
+        <include refid="from"></include>
+        <include refid="where"></include>
+    </select>
+
+    <!-- 操作：根据条件统计数据 -->
+    <select id="countByCondition" resultType="java.lang.Long" useCache="false">
+        select count(*)
+        <include refid="from"></include>
+        <include refid="where"></include>
+    </select>
+
+    <!-- 操作：根据主键更新数据 -->
+    <update id="update">
+        update ts_role
+        <trim prefix="set" suffixOverrides=",">
+            <if test="name != null">name = #{ name } ,</if>
+            <if test="orgId != null">org_id = #{ orgId } ,</if>
+            <if test="status != null">status = #{ status } ,</if>
+        </trim>
+        <trim prefix="where">
+            id = #{ id }
+        </trim>
+    </update>
+</mapper>

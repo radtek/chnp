@@ -163,3 +163,7 @@ textarea{
     vertical-align: middle;
     font-size: 12px;
 }
+
+.control-label{
+    padding: 0;
+}

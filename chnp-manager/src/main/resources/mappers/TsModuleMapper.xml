@@ -1,67 +1,171 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace必须与接口的全类名一致-->
 <mapper namespace="chnp.manager.mvc.dao.TsModuleDao">
-	<resultMap id="BaseResultMap" type="chnp.manager.mvc.model.domain.TsModule">
-		<id property="id" column="id" jdbcType="INTEGER"/>
-		<result property="name" column="name" jdbcType="VARCHAR"/>
-		<result property="type" column="type" jdbcType="INTEGER"/>
-		<result property="url" column="url" jdbcType="VARCHAR"/>
-		<result property="target" column="target" jdbcType="INTEGER"/>
-		<result property="parentId" column="parent_id" jdbcType="INTEGER"/>
-		<result property="level" column="level" jdbcType="INTEGER"/>
-		<result property="icon" column="icon" jdbcType="VARCHAR"/>
-		<result property="authName" column="auth_name" jdbcType="VARCHAR"/>
-		<result property="sort" column="sort" jdbcType="INTEGER"/>
-		<result property="rootId" column="root_id" jdbcType="INTEGER"/>
-		<result property="isParent" column="is_parent" jdbcType="INTEGER"/>
-	</resultMap>
 
-	<sql id="columns">
-		id, name, type, url, target, parent_id, level, icon, auth_name, sort, root_id, is_parent
-	</sql>
+    <!-- 结果映射 -->
+    <resultMap id="tsModuleMapper" type="chnp.manager.mvc.model.domain.TsModule">
+        <id column="id" property="id" ></id>
+        <result column="name" property="name" ></result>
+        <result column="type" property="type" ></result>
+        <result column="url" property="url" ></result>
+        <result column="target" property="target" ></result>
+        <result column="parent_id" property="parentId" ></result>
+        <result column="level" property="level" ></result>
+        <result column="icon" property="icon" ></result>
+        <result column="auth_name" property="authName" ></result>
+        <result column="sort" property="sort" ></result>
+        <result column="root_id" property="rootId" ></result>
+        <result column="is_parent" property="isParent" ></result>
+    </resultMap>
 
-	<sql id="where">
-		<trim prefix="where" suffixOverrides="and">
-			<if test="id != null"><![CDATA[ ts_module.id = #{id, jdbcType=INTEGER} and ]]></if>
-			<if test="name != null and name != ''"><![CDATA[ ts_module.user_name = #{name, jdbcType=VARCHAR} and ]]></if>
-			<if test="type != null"><![CDATA[ ts_module.type = #{type, jdbcType=INTEGER} and ]]></if>
-			<if test="url != null and url != ''"><![CDATA[ ts_module.url = #{url, jdbcType=VARCHAR} and ]]></if>
-			<if test="target != null"><![CDATA[ ts_module.target = #{target, jdbcType=INTEGER} and ]]></if>
-			<if test="parentId != null"><![CDATA[ ts_module.parent_id = #{parentId, jdbcType=INTEGER} and ]]></if>
-			<if test="level != null"><![CDATA[ ts_module.level = #{level, jdbcType=INTEGER} and ]]></if>
-			<if test="icon != null and icon != ''"><![CDATA[ ts_module.icon = #{icon, jdbcType=VARCHAR} and ]]></if>
-			<if test="authName != null and authName != ''"><![CDATA[ ts_module.auth_name = #{authName, jdbcType=VARCHAR} and ]]></if>
-			<if test="sort != null"><![CDATA[ ts_module.sort = #{sort, jdbcType=INTEGER} and ]]></if>
-			<if test="rootId != null"><![CDATA[ ts_module.root_id = #{rootId, jdbcType=INTEGER} and ]]></if>
-			<if test="isParent != null"><![CDATA[ ts_module.is_parent = #{isParent, jdbcType=INTEGER} and ]]></if>
-			<if test="search != null and search != ''">
-				<![CDATA[
-			        (
-						lower(ts_module.name) like lower(concat('%',#{search, jdbcType=VARCHAR},'%')) or
-						lower(ts_module.auth_name) like lower(concat('%',#{search, jdbcType=VARCHAR},'%'))
-			        ) and
-			    ]]>
-			</if>
-			<if test="filterCondition != null and filterCondition != ''"><![CDATA[ ${filterCondition} and]]></if>
-		</trim>
-		<if test="orderCondition != null and orderCondition != ''"><![CDATA[ order by ${orderCondition} ]]></if>
-	</sql>
-	
-	<select id="getByCondition" resultMap="BaseResultMap">
-		select <include refid="columns"/>
+    <!-- 查询字段 -->
+    <sql id="columns">
+        <trim suffixOverrides=",">
+            id ,name ,type ,url ,target ,parent_id ,level ,icon ,auth_name ,sort ,root_id ,is_parent ,
+            <if test="additionalColumns != null and additionalColumns != ''"><![CDATA[ ${ additionalColumns } , ]]></if>
+        </trim>
+    </sql>
+
+    <!-- 关联表 -->
+    <sql id="from">
+        <trim suffixOverrides=",">
+            from ts_module ,
+        </trim>
+        <if test="additionalTables != null and additionalTables != ''"><![CDATA[ ${ additionalTables } ]]></if>
+    </sql>
+
+    <!-- 过滤条件 -->
+    <sql id="where">
+        <trim prefix="where" suffixOverrides="and">
+        	<![CDATA[ 1=1 and ]]>
+            <if test="id != null"><![CDATA[ ts_module.id = #{ id } and ]]></if>
+            <if test="name != null"><![CDATA[ ts_module.name = #{ name } and ]]></if>
+            <if test="type != null"><![CDATA[ ts_module.type = #{ type } and ]]></if>
+            <if test="url != null"><![CDATA[ ts_module.url = #{ url } and ]]></if>
+            <if test="target != null"><![CDATA[ ts_module.target = #{ target } and ]]></if>
+            <if test="parentId != null"><![CDATA[ ts_module.parent_id = #{ parentId } and ]]></if>
+            <if test="level != null"><![CDATA[ ts_module.level = #{ level } and ]]></if>
+            <if test="icon != null"><![CDATA[ ts_module.icon = #{ icon } and ]]></if>
+            <if test="authName != null"><![CDATA[ ts_module.auth_name = #{ authName } and ]]></if>
+            <if test="sort != null"><![CDATA[ ts_module.sort = #{ sort } and ]]></if>
+            <if test="rootId != null"><![CDATA[ ts_module.root_id = #{ rootId } and ]]></if>
+            <if test="isParent != null"><![CDATA[ ts_module.is_parent = #{ isParent } and ]]></if>
+            <if test="search != null and search != ''">
+                <![CDATA[
+                    (
+                        lower(ts_module.name) like lower(concat('%',#{ search, jdbcType=VARCHAR,'%')) or
+                        lower(ts_module.url) like lower(concat('%',#{ search, jdbcType=VARCHAR,'%')) or
+                        lower(ts_module.auth_name) like lower(concat('%',#{ search, jdbcType=VARCHAR,'%'))
+                    ) and
+                ]]>
+            </if>
+            <if test="additionalFilters != null and additionalFilters != ''"><![CDATA[ ${ additionalFilters } and ]]></if>
+        </trim>
+        <if test="additionalConstrains != null and additionalConstrains != ''"><![CDATA[ ${ additionalConstrains } ]]></if>
+    </sql>
+
+    <!-- 操作：插入数据 -->
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
+        insert into ts_module
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id ,</if>
+            <if test="name != null and name != ''">name ,</if>
+            <if test="type != null">type ,</if>
+            <if test="url != null and url != ''">url ,</if>
+            <if test="target != null and target != ''">target ,</if>
+            <if test="parentId != null">parent_id ,</if>
+            <if test="level != null">level ,</if>
+            <if test="icon != null and icon != ''">icon ,</if>
+            <if test="authName != null and authName != ''">auth_name ,</if>
+            <if test="sort != null">sort ,</if>
+            <if test="rootId != null">root_id ,</if>
+            <if test="isParent != null">is_parent ,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{ id } ,</if>
+            <if test="name != null and name != ''">#{ name } ,</if>
+            <if test="type != null">#{ type } ,</if>
+            <if test="url != null and url != ''">#{ url } ,</if>
+            <if test="target != null and target != ''">#{ target } ,</if>
+            <if test="parentId != null">#{ parentId } ,</if>
+            <if test="level != null">#{ level } ,</if>
+            <if test="icon != null and icon != ''">#{ icon } ,</if>
+            <if test="authName != null and authName != ''">#{ authName } ,</if>
+            <if test="sort != null">#{ sort } ,</if>
+            <if test="rootId != null">#{ rootId } ,</if>
+            <if test="isParent != null">#{ isParent } ,</if>
+        </trim>
+    </insert>
+
+	<!-- 操作：根据主键删除 -->
+	<delete id="deleteById">
+		delete ts_module
 		from ts_module
-		<include refid="where"/>
-	</select>
-
-	<select id="findByCondition" resultMap="BaseResultMap">
-		select <include refid="columns"/>
-		from ts_module
-		<include refid="where"/>
-	</select>
-	
-	<delete id="deleteByCondition">
-		delete tm from ts_module tm
-		<include refid="where"/>
+		where id = #{ id }
 	</delete>
 
+    <!-- 操作：根据条件删除 -->
+    <delete id="delete">
+        delete ts_module
+	    <include refid="from"/>
+        <include refid="where"/>
+    </delete>
+
+	<!-- 操作：根据条件查询数据 -->
+	<select id="getSelectTree" resultType="java.util.Map" useCache="false">
+		select id, name, parent_id pId
+		<include refid="from"/>
+		<include refid="where"/>
+	</select>
+
+	<!-- 操作：根据主键获取数据 -->
+	<select id="getById" resultMap="tsModuleMapper" useCache="false">
+		select <include refid="columns"/>
+		from ts_module
+		where id = #{ id }
+	</select>
+
+    <!-- 操作：根据条件获取数据 -->
+    <select id="getByCondition" resultMap="tsModuleMapper" useCache="false">
+        select <include refid="columns"/>
+	    <include refid="from"/>
+        <include refid="where"/>
+        limit 1
+    </select>
+
+    <!-- 操作：根据条件查询数据 -->
+    <select id="findByCondition" resultMap="tsModuleMapper" useCache="false">
+        select <include refid="columns"/>
+	    <include refid="from"/>
+        <include refid="where"/>
+    </select>
+
+    <!-- 操作：根据条件统计数据 -->
+    <select id="countByCondition" resultType="java.lang.Long" useCache="false">
+        select count(*)
+	    <include refid="from"/>
+        <include refid="where"/>
+    </select>
+
+    <!-- 操作：根据主键更新数据 -->
+    <update id="updateById">
+        update ts_module
+        <trim prefix="set" suffixOverrides=",">
+            <if test="name != null">name = #{ name } ,</if>
+            <if test="type != null">type = #{ type } ,</if>
+            <if test="url != null">url = #{ url } ,</if>
+            <if test="target != null">target = #{ target } ,</if>
+            <if test="parentId != null">parent_id = #{ parentId } ,</if>
+            <if test="level != null">level = #{ level } ,</if>
+            <if test="icon != null">icon = #{ icon } ,</if>
+            <if test="authName != null">auth_name = #{ authName } ,</if>
+            <if test="sort != null">sort = #{ sort } ,</if>
+            <if test="rootId != null">root_id = #{ rootId } ,</if>
+            <if test="isParent != null">is_parent = #{ isParent } ,</if>
+        </trim>
+        <trim prefix="where">
+            id = #{ id }
+        </trim>
+    </update>
 </mapper>

@@ -1,0 +1,121 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace必须与接口的全类名一致-->
+<mapper namespace="chnp.manager.mvc.dao.TsPluginDao">
+
+    <!-- 结果映射 -->
+    <resultMap id="tsPluginMapper" type="chnp.manager.mvc.model.domain.TsPlugin">
+        <id column="id" property="id"></id>
+        <result column="name" property="name"></result>
+        <result column="version" property="version"></result>
+        <result column="update_time" property="updateTime"></result>
+        <result column="type" property="type"></result>
+        <result column="descr" property="descr"></result>
+    </resultMap>
+
+    <!-- 查询字段 -->
+    <sql id="columns">
+        <trim suffixOverrides=",">
+            id ,name ,version ,update_time ,type ,descr ,
+            <if test="additionalColumns != null and additionalColumns != ''"><![CDATA[ ${ additionalColumns } , ]]></if>
+        </trim>
+    </sql>
+
+    <!-- 关联表 -->
+    <sql id="from">
+        <trim suffixOverrides=",">
+            from ts_plugin ,
+        </trim>
+        <if test="additionalTables != null and additionalTables != ''"><![CDATA[ ${ additionalTables } ]]></if>
+    </sql>
+
+    <!-- 过滤条件 -->
+    <sql id="where">
+        <trim prefix="where" suffixOverrides="and">
+        	<![CDATA[ 1=1 and ]]>
+            <if test="id != null"><![CDATA[ ts_plugin.id = #{ id } and ]]></if>
+            <if test="name != null"><![CDATA[ ts_plugin.name = #{ name } and ]]></if>
+            <if test="version != null"><![CDATA[ ts_plugin.version = #{ version } and ]]></if>
+            <if test="updateTimeBegin != null"><![CDATA[ ts_plugin.update_time >= #{ updateTimeBegin } and ]]></if>
+            <if test="updateTimeEnd != null"><![CDATA[ ts_plugin.update_time < #{ updateTimeEnd } and ]]></if>
+            <if test="type != null"><![CDATA[ ts_plugin.type = #{ type } and ]]></if>
+            <if test="descr != null"><![CDATA[ ts_plugin.descr = #{ descr } and ]]></if>
+            <if test="search != null and search != ''">
+                <![CDATA[
+                    (
+                        lower(ts_plugin.name) like lower(concat('%',#{ search, jdbcType=VARCHAR},'%')) or
+                        lower(ts_plugin.version) like lower(concat('%',#{ search, jdbcType=VARCHAR},'%')) or
+                        lower(ts_plugin.descr) like lower(concat('%',#{ search, jdbcType=VARCHAR},'%'))
+                    ) and
+                ]]>
+            </if>
+            <if test="additionalFilters != null and additionalFilters != ''"><![CDATA[ ${ additionalFilters } and ]]></if>
+        </trim>
+        <if test="additionalConstrains != null and additionalConstrains != ''"><![CDATA[ ${ additionalConstrains } ]]></if>
+    </sql>
+
+    <!-- 操作：插入数据 -->
+    <insert id="insert" useGeneratedKeys="true">
+        insert into ts_plugin
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id ,</if>
+            <if test="name != null">name ,</if>
+            <if test="version != null">version ,</if>
+            <if test="updateTime != null">update_time ,</if>
+            <if test="type != null">type ,</if>
+            <if test="descr != null">descr ,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{ id } ,</if>
+            <if test="name != null">#{ name } ,</if>
+            <if test="version != null">#{ version } ,</if>
+            <if test="updateTime != null">#{ updateTime } ,</if>
+            <if test="type != null">#{ type } ,</if>
+            <if test="descr != null">#{ descr } ,</if>
+        </trim>
+    </insert>
+
+    <!-- 操作：根据条件删除 -->
+    <delete id="delete">
+        delete ts_plugin
+        <include refid="from"></include>
+        <include refid="where"></include>
+    </delete>
+
+    <!-- 操作：根据条件获取数据 -->
+    <select id="getByCondition" resultMap="tsPluginMapper" useCache="false">
+        select <include refid="columns"></include>
+        <include refid="from"></include>
+        <include refid="where"></include>
+        limit 1
+    </select>
+
+    <!-- 操作：根据条件查询数据 -->
+    <select id="findByCondition" resultMap="tsPluginMapper" useCache="false">
+        select <include refid="columns"></include>
+        <include refid="from"></include>
+        <include refid="where"></include>
+    </select>
+
+    <!-- 操作：根据条件统计数据 -->
+    <select id="countByCondition" resultType="java.lang.Long" useCache="false">
+        select count(*)
+        <include refid="from"></include>
+        <include refid="where"></include>
+    </select>
+
+    <!-- 操作：根据主键更新数据 -->
+    <update id="update">
+        update ts_plugin
+        <trim prefix="set" suffixOverrides=",">
+            <if test="name != null">name = #{ name } ,</if>
+            <if test="version != null">version = #{ version } ,</if>
+            <if test="updateTime != null">update_time = #{ updateTime } ,</if>
+            <if test="type != null">type = #{ type } ,</if>
+            <if test="descr != null">descr = #{ descr } ,</if>
+        </trim>
+        <trim prefix="where">
+            id = #{ id }
+        </trim>
+    </update>
+</mapper>

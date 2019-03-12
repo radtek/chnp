@@ -153,12 +153,15 @@
         <script>
             var generator = {};
 
+            generator.getFilter = function() {
+                return $("#template_search_form").serializeArray();
+            };
+
             generator.searching = function() {
                 // 重置Table中Checkbox的状态
                 $("#tTemplate input[type=checkbox]").prop({checked: false});
 
-                params = $("#template_search_form").serializeArray();
-                generator.dataTablesUtil.searching(params);
+                generator.dataTablesUtil.searching(generator.getFilter());
             };
 
             $(function() {
@@ -230,6 +233,7 @@
                                     '&nbsp;<button class="btn-danger op-btn-del" type="button" data-url="/gnrtemplate/del?ids=' + data + '" onclick=""><i class="fa fa-trash"></i>删除</button>';
                         }
                     },
+                    filter: generator.getFilter,
                     dataTable: {
                         order: [
                             [3, "desc"]

@@ -1,18 +1,20 @@
 package chnp.manager.mvc.dao;
 
+import chnp.manager.base.dao.IbaBaseDao;
 import chnp.manager.mvc.model.domain.TsModule;
 import chnp.manager.mvc.model.query.TsModuleQuery;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
-public interface TsModuleDao {
+public interface TsModuleDao extends IbaBaseDao<TsModule, TsModuleQuery> {
 
-	TsModule getByCondition(TsModuleQuery query);
+	Long deleteById(Integer id);
 
-	List<TsModule> findByCondition(TsModuleQuery query);
+	TsModule getById(Integer id);
 
-	int deleteByCondition(TsModuleQuery query);
+	List<Map<String, Object>> getSelectTree(TsModuleQuery query);
 
 }

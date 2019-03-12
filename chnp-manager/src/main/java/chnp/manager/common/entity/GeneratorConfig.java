@@ -4,7 +4,6 @@ import chnp.common.mysql.MysqlUtils;
 import chnp.common.utils.FileUtils;
 import chnp.common.utils.StringUtils;
 import chnp.manager.generator.model.domain.GnrTemplate;
-import chnp.manager.mvc.model.domain.TemplateInfo;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateExceptionHandler;
@@ -24,7 +23,8 @@ public class GeneratorConfig {
 	public static final String PLACEHOLDER_DIR_CLASS = "${BasePackageDir}";
 	public static final String PLACEHOLDER_FILE_CLASS = "${ClassName}";
 	public static final String PAGE_DIR = "src/resources/pages/${AuthName}/";
-	public static final String CODE_DIR = "src/resources/java/${BasePackageDir}/";
+	public static final String MAPPER_DIR = "src/resources/mapper/${BasePackageDir}/";
+	public static final String CODE_DIR = "src/main/java/${BasePackageDir}/";
 
 	private String orgType;
 	private String orgName;
@@ -203,7 +203,7 @@ public class GeneratorConfig {
 	 */
 	public void input(List<GnrTemplate> templateInfos) throws IOException {
 		for (GnrTemplate templateInfo : templateInfos) {
-			String templateFilePath = templateBasePath + (1 == templateInfo.getTemplateType() ? PAGE_DIR : CODE_DIR) + templateInfo.getTemplateName();
+			String templateFilePath = templateBasePath + (1 == templateInfo.getTemplateType() ? PAGE_DIR : 2 == templateInfo.getTemplateType() ? CODE_DIR : MAPPER_DIR) + templateInfo.getTemplateName();
 			File templateFile = new File(templateFilePath);
 			if (!templateFile.getParentFile().exists()) {
 				templateFile.getParentFile().mkdirs();

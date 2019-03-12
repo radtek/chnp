@@ -1,0 +1,145 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace必须与接口的全类名一致-->
+<mapper namespace="chnp.manager.mvc.dao.TsDataItemDao">
+
+    <!-- 结果映射 -->
+    <resultMap id="tsDataItemMapper" type="chnp.manager.mvc.model.domain.TsDataItem">
+        <id column="id" property="id" />
+        <result column="item_key" property="itemKey" />
+        <result column="item_value" property="itemValue" />
+        <result column="item_desc" property="itemDesc" />
+        <result column="item_sort" property="itemSort" />
+        <result column="data_id" property="dataId" />
+    </resultMap>
+
+	<resultMap id="tsDataItemCmplxMapper" type="chnp.manager.mvc.model.domain.TsDataItem">
+		<id column="id" property="id" />
+        <result column="item_key" property="itemKey" />
+        <result column="item_value" property="itemValue" />
+        <result column="item_desc" property="itemDesc" />
+        <result column="item_sort" property="itemSort" />
+        <result column="data_id" property="dataId" />
+		<association column="data_id" property="tsData" resultMap="tsDataMapper" columnPrefix="d_"/>
+	</resultMap>
+    <resultMap id="tsDataMapper" type="chnp.manager.mvc.model.domain.TsData">
+        <result column="data_key" property="dataKey" />
+        <result column="data_name" property="dataName" />
+        <result column="data_desc" property="dataDesc" />
+    </resultMap>
+
+    <!-- 查询字段 -->
+    <sql id="columns">
+        <trim suffixOverrides=",">
+            id ,item_key ,item_value ,item_desc ,item_sort ,data_id ,
+            <if test="additionalColumns != null and additionalColumns != ''"><![CDATA[ ${ additionalColumns } , ]]></if>
+        </trim>
+    </sql>
+
+    <!-- 关联表 -->
+    <sql id="from">
+        <trim suffixOverrides=",">
+            from ts_data_item ,
+        </trim>
+        <if test="additionalTables != null and additionalTables != ''"><![CDATA[ ${ additionalTables } ]]></if>
+    </sql>
+
+    <!-- 过滤条件 -->
+    <sql id="where">
+        <trim prefix="where" suffixOverrides="and">
+        	<![CDATA[ 1=1 and ]]>
+            <if test="id != null"><![CDATA[ ts_data_item.id = #{ id } and ]]></if>
+            <if test="itemKey != null"><![CDATA[ ts_data_item.item_key = #{ itemKey } and ]]></if>
+            <if test="itemValue != null"><![CDATA[ ts_data_item.item_value = #{ itemValue } and ]]></if>
+            <if test="itemDesc != null"><![CDATA[ ts_data_item.item_desc = #{ itemDesc } and ]]></if>
+            <if test="itemSort != null"><![CDATA[ ts_data_item.item_sort = #{ itemSort } and ]]></if>
+            <if test="dataId != null"><![CDATA[ ts_data_item.data_id = #{ dataId } and ]]></if>
+            <if test="search != null and search != ''">
+                <![CDATA[
+                    (
+                        lower(ts_data_item.item_key) like lower(concat('%',#{ search, jdbcType=VARCHAR},'%')) or
+                        lower(ts_data_item.item_value) like lower(concat('%',#{ search, jdbcType=VARCHAR},'%'))
+                    ) and
+                ]]>
+            </if>
+            <if test="additionalFilters != null and additionalFilters != ''"><![CDATA[ ${ additionalFilters } and ]]></if>
+        </trim>
+        <if test="additionalConstrains != null and additionalConstrains != ''"><![CDATA[ ${ additionalConstrains } ]]></if>
+    </sql>
+
+	<select id="getByAssociation" resultMap="tsDataItemCmplxMapper" useCache="false">
+		select di.*, d.data_key as d_data_key, d.data_name as d_data_name, d.data_desc as d_data_desc
+		from (
+			select <include refid="columns"/>
+			from ts_data_item
+			<include refid="where"/>
+			limit 1
+		) di
+		left join ts_data d on d.id=di.data_id
+	</select>
+
+    <!-- 操作：插入数据 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into ts_data_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id ,</if>
+            <if test="itemKey != null">item_key ,</if>
+            <if test="itemValue != null">item_value ,</if>
+            <if test="itemDesc != null">item_desc ,</if>
+            <if test="itemSort != null">item_sort ,</if>
+            <if test="dataId != null">data_id ,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{ id } ,</if>
+            <if test="itemKey != null">#{ itemKey } ,</if>
+            <if test="itemValue != null">#{ itemValue } ,</if>
+            <if test="itemDesc != null">#{ itemDesc } ,</if>
+            <if test="itemSort != null">#{ itemSort } ,</if>
+            <if test="dataId != null">#{ dataId } ,</if>
+        </trim>
+    </insert>
+
+    <!-- 操作：根据条件删除 -->
+    <delete id="delete">
+        delete ts_data_item
+        <include refid="from" />
+        <include refid="where" />
+    </delete>
+
+    <!-- 操作：根据条件获取数据 -->
+    <select id="getByCondition" resultMap="tsDataItemMapper" useCache="false">
+        select <include refid="columns" />
+        <include refid="from" />
+        <include refid="where" />
+        limit 1
+    </select>
+
+    <!-- 操作：根据条件查询数据 -->
+    <select id="findByCondition" resultMap="tsDataItemMapper" useCache="false">
+        select <include refid="columns" />
+        <include refid="from" />
+        <include refid="where" />
+    </select>
+
+    <!-- 操作：根据条件统计数据 -->
+    <select id="countByCondition" resultType="long" useCache="false">
+        select count(*)
+        <include refid="from" />
+        <include refid="where" />
+    </select>
+
+    <!-- 操作：根据主键更新数据 -->
+    <update id="update">
+        update ts_data_item
+        <trim prefix="set" suffixOverrides=",">
+            <if test="itemKey != null">item_key = #{ itemKey } ,</if>
+            <if test="itemValue != null">item_value = #{ itemValue } ,</if>
+            <if test="itemDesc != null">item_desc = #{ itemDesc } ,</if>
+            <if test="itemSort != null">item_sort = #{ itemSort } ,</if>
+            <if test="dataId != null">data_id = #{ dataId } ,</if>
+        </trim>
+        <trim prefix="where">
+            id = #{ id }
+        </trim>
+    </update>
+</mapper>
